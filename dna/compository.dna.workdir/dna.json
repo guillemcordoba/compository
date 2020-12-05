@@ -6,8 +6,8 @@
     "file_storage": {
       "wasm_path": "../target/wasm32-unknown-unknown/release/file_storage.wasm"
     },
-    "zomepository": {
-      "wasm_path": "../target/wasm32-unknown-unknown/release/zomepository.wasm"
+    "compository": {
+      "wasm_path": "../target/wasm32-unknown-unknown/release/compository.wasm"
     }
   }
 }

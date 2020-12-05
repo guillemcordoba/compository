@@ -21,7 +21,7 @@ Configurable pieces for the future
 - Authors/reviewers
 
 Tools to make
-- UI service to do all client side processes
+- UI service to do all client side processing
 - CLI tool to upload both DNA and UI to DHT
 
 */

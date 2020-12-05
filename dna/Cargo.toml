@@ -1,6 +1,7 @@
 [workspace]
 members = [
   "zomes/file_storage",
+  "zomes/compository",
 ]
 
 [profile.dev]
