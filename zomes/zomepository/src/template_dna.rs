@@ -8,5 +8,5 @@ pub struct TemplateDna {
 #[hdk_entry(id = "instantiated_dna")]
 pub struct InstantiatedDna {
     template_dna: EntryHash,
-    properties: Map<String, String>, // TODO: fix this
+    properties: SerializedBytes, // TODO: fix this
 }
