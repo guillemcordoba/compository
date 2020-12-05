@@ -16,5 +16,10 @@ Configurable pieces for the future
 - How to get the element from the entry hash
 - Dna wide UIs for more specificity
 - Multiple and configurable zomepositories
+- Authors/reviewers
+
+Tools to make
+- UI service to do all client side processes
+- CLI tool to upload both DNA and UI to DHT
 
 */
