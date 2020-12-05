@@ -4,6 +4,8 @@ mod template_dna;
 
 /*
 
+Process: receive a new unknown reference to a foreign dna
+
 1. Receive <HASH_OF_DNA>://<HASH_OF_ENTRY>
 2. Fetch instantiated dna with hash_of_dna
 3. Fetch all zomes from template dna and install dna // TODO: what about other companion dnas??
@@ -21,5 +23,13 @@ Configurable pieces for the future
 Tools to make
 - UI service to do all client side processes
 - CLI tool to upload both DNA and UI to DHT
+
+*/
+
+/* In another repository
+
+Blocky
+- Separate dna to register cells with common typed zomes (by hash?)
+- TODO: finalize process
 
 */
