@@ -4,5 +4,5 @@ use hdk3::prelude::*;
 pub struct Zome {
     wasm_file: EntryHash,
     properties: Vec<String>, // TODO: change to map,
-    
+    entry_definitions: Vec<String>
 }
