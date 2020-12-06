@@ -308,10 +308,16 @@ name = "cli"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "holo_hash",
  "holochain",
+ "holochain_serialized_bytes",
  "holochain_types",
  "holochain_websocket",
  "holochain_zome_types",
+ "serde",
+ "serde_bytes",
+ "serde_json",
+ "structopt",
  "tokio",
  "tracing",
  "tracing-futures",

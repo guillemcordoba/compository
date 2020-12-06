@@ -1,12 +1,18 @@
-extern crate holochain;
+use structopt::StructOpt;
 
 mod conductor_api;
 mod dna_file;
-use std::env;
 
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use dna_file::{get_zomes, read_dna};
 use tracing::instrument;
+
+#[derive(Debug, StructOpt)]
+#[structopt(name = "compository-publish")]
+struct Opt {
+    #[structopt(short = "d", long)]
+    dna: Option<std::path::PathBuf>,
+}
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -16,22 +22,15 @@ async fn main() -> Result<()> {
 
 #[instrument(err)]
 async fn run() -> Result<()> {
-    let dna_path = get_dna_path()?;
+    let opt = Opt::from_args();
 
-    let dna = read_dna(dna_path).await?;
+    if let Some(work_dir) = opt.dna {
+        let dna = read_dna(&work_dir).await?;
 
-    let zomes = get_zomes(dna)?;
+        let zomes = get_zomes(dna)?;
 
-    println!("{:?}", zomes);
+        println!("{:?}", zomes);
+    }
 
     Ok(())
-}
-
-fn get_dna_path() -> Result<String> {
-    let args: Vec<String> = env::args().collect();
-
-    match args.get(1) {
-        Some(arg) => Ok(arg.clone()),
-        None => Err(anyhow!("Bad dna path")),
-    }
 }

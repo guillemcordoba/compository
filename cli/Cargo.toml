@@ -9,9 +9,15 @@ version = "0.1.0"
 [dependencies]
 anyhow = "1.0"
 holochain = {git = "https://github.com/holochain/holochain", rev = "cac00d4", package = "holochain"}
+holo_hash = {git = "https://github.com/holochain/holochain", rev = "cac00d4", package = "holo_hash"}
+holochain_serialized_bytes = "=0.0.45"
 holochain_types = {git = "https://github.com/holochain/holochain", rev = "cac00d4", package = "holochain_types"}
-holochain_zome_types = {git = "https://github.com/holochain/holochain", rev = "cac00d4", package = "holochain_zome_types"}
 holochain_websocket = {git = "https://github.com/holochain/holochain", rev = "cac00d4", package = "holochain_websocket"}
+holochain_zome_types = {git = "https://github.com/holochain/holochain", rev = "cac00d4", package = "holochain_zome_types"}
+serde = {version = "1.0.104", features = ["derive"]}
+serde_bytes = "0.11"
+serde_json = {version = "1.0.51", features = ["preserve_order"]}
+structopt = "0.3.11"
 tokio = {version = "0.2.11", features = ["full"]}
 tracing = "=0.1.21"
 tracing-futures = "0.2"
