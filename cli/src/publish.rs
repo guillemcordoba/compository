@@ -5,11 +5,13 @@ use crate::{
         app_websocket::AppWebsocket,
         types::{ClientAppResponse, ClientZomeCall},
     },
-    types::{TemplateDna, ZomeWithCode},
+    types::{TemplateDna, ZomeToPublish, ZomeWithCode},
 };
 use anyhow::{anyhow, Result};
 use hc_utils::WrappedEntryHash;
 use holochain_types::cell::CellId;
+
+use self::file_upload::upload_file;
 
 mod file_upload;
 
@@ -79,7 +81,7 @@ async fn publish_zome(
     compository_cell_id: &CellId,
     zome: ZomeWithCode,
 ) -> Result<String> {
-    let zome_to_publish = file_upload::upload_zome(ws, compository_cell_id, zome).await?;
+    let zome_to_publish = upload_zome(ws, compository_cell_id, zome).await?;
 
     let zome_call = ClientZomeCall {
         cap: None,
@@ -103,4 +105,29 @@ async fn publish_zome(
         }
         _ => Err(anyhow!("Bad response")),
     }
+}
+
+async fn upload_zome(
+    ws: &mut AppWebsocket,
+    compository_cell_id: &CellId,
+    zome: ZomeWithCode,
+) -> Result<ZomeToPublish> {
+    let file_hash = upload_file(
+        ws,
+        compository_cell_id,
+        "test.wasm".into(),
+        "wasm".into(),
+        &zome.wasm_code.code.to_vec(),
+    )
+    .await?;
+
+    let zome_to_publish = ZomeToPublish {
+        entry_defs: zome.entry_defs,
+        required_membrane_proof: zome.required_membrane_proof,
+        required_properties: zome.required_properties,
+        wasm_file: file_hash,
+        wasm_hash: zome.wasm_hash,
+    };
+
+    Ok(zome_to_publish)
 }

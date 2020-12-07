@@ -6,23 +6,22 @@ use hc_utils::WrappedEntryHash;
 use holochain_types::cell::CellId;
 use holochain_zome_types::timestamp;
 
-use crate::{
-    conductor_api::{
-        app_websocket::AppWebsocket,
-        types::{ClientAppResponse, ClientZomeCall},
-    },
-    types::{ZomeToPublish, ZomeWithCode},
+use crate::conductor_api::{
+    app_websocket::AppWebsocket,
+    types::{ClientAppResponse, ClientZomeCall},
 };
 
 const CHUNKS_SIZE: usize = 1024 * 1024 * 10;
 
-pub async fn upload_zome(
+pub async fn upload_file(
     ws: &mut AppWebsocket,
     compository_cell_id: &CellId,
-    zome: ZomeWithCode,
-) -> Result<ZomeToPublish> {
-    let size = zome.wasm_code.code.len();
-    let chunk_iter = zome.wasm_code.code.chunks(CHUNKS_SIZE);
+    name: String,
+    file_type: String,
+    content: &[u8],
+) -> Result<String> {
+    let size = content.len();
+    let chunk_iter = content.chunks(CHUNKS_SIZE);
 
     let mut chunk_hashes: Vec<String> = vec![];
 
@@ -32,17 +31,17 @@ pub async fn upload_zome(
         chunk_hashes.push(hash);
     }
 
-    let file_hash = create_file(ws, &compository_cell_id, size, chunk_hashes).await?;
+    let file_hash = create_file(
+        ws,
+        &compository_cell_id,
+        name,
+        file_type,
+        size,
+        chunk_hashes,
+    )
+    .await?;
 
-    let zome_to_publish = ZomeToPublish {
-        entry_defs: zome.entry_defs,
-        required_membrane_proof: zome.required_membrane_proof,
-        required_properties: zome.required_properties,
-        wasm_file: file_hash,
-        wasm_hash: zome.wasm_hash,
-    };
-
-    Ok(zome_to_publish)
+    Ok(file_hash)
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, SerializedBytes)]
@@ -86,6 +85,8 @@ pub struct CreateFileMetadataInput {
 async fn create_file(
     ws: &mut AppWebsocket,
     compository_cell_id: &CellId,
+    name: String,
+    file_type: String,
     size: usize,
     chunks_hashes: Vec<String>,
 ) -> Result<String> {
@@ -98,11 +99,11 @@ async fn create_file(
     );
 
     let payload = CreateFileMetadataInput {
-        name: "test.wasm".into(),
+        name,
         last_modified: timestamp,
         size,
         chunks_hashes,
-        file_type: "wasm".into(),
+        file_type,
     };
 
     let zome_call = ClientZomeCall {
