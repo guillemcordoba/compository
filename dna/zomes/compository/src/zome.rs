@@ -5,6 +5,7 @@ use holo_hash::WasmHash;
 #[hdk_entry(id = "zome")]
 pub struct Zome {
     wasm_file: WrappedEntryHash,
+    ui_bundle_file: Option<WrappedEntryHash>,
     wasm_hash: WasmHash,
     entry_defs: Vec<String>,
     required_properties: Vec<String>, // TODO: change to map, with property types

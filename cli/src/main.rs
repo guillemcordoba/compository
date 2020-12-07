@@ -35,11 +35,11 @@ async fn main() -> Result<()> {
 async fn run() -> Result<()> {
     let opt = Opt::from_args();
 
-    let dna = read_dna(&opt.workdir).await?;
+    let dna_def_json = read_dna(&opt.workdir).await?;
 
-    let dna_name = dna.dna.name.clone();
+    let dna_name = dna_def_json.name.clone();
 
-    let zomes = get_zomes(dna)?;
+    let zomes = get_zomes(dna_def_json, &opt.workdir).await?;
 
     let mut ws = AppWebsocket::connect(opt.url.clone()).await?;
 

@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap};
 
 use anyhow::{anyhow, Result};
 use holochain::core::ribosome::{
@@ -20,7 +20,7 @@ use std::convert::TryInto;
 
 use crate::types::ZomeWithCode;
 
-pub async fn read_dna(dna_work_dir: &impl AsRef<std::path::Path>) -> Result<DnaFile> {
+pub async fn read_dna(dna_work_dir: &impl AsRef<std::path::Path>) -> Result<DnaDefJson> {
     let dna_work_dir = dna_work_dir.as_ref().canonicalize()?;
     let mut json_filename = dna_work_dir.clone();
     json_filename.push("dna.json");
@@ -29,9 +29,7 @@ pub async fn read_dna(dna_work_dir: &impl AsRef<std::path::Path>) -> Result<DnaF
 
     let json_file: DnaDefJson = serde_json::from_slice(&json_data)?;
 
-    let dna_file_content = json_file.compile_dna_file(&dna_work_dir).await?;
-
-    Ok(dna_file_content)
+    Ok(json_file)
 }
 
 pub fn get_entry_defs(dna_file: DnaFile) -> Result<BTreeMap<ZomeName, EntryDefs>> {
@@ -45,7 +43,14 @@ pub fn get_entry_defs(dna_file: DnaFile) -> Result<BTreeMap<ZomeName, EntryDefs>
     }
 }
 
-pub fn get_zomes(dna_file: DnaFile) -> Result<Vec<(String, ZomeWithCode)>> {
+pub async fn get_zomes(
+    dna_file_content: DnaDefJson,
+    dna_work_dir: &impl AsRef<std::path::Path>,
+) -> Result<Vec<(String, ZomeWithCode)>> {
+    let dna_work_dir = dna_work_dir.as_ref().canonicalize()?;
+
+    let dna_file = dna_file_content.compile_dna_file(&dna_work_dir).await?;
+
     let (dna_def, _): (DnaDef, Vec<DnaWasm>) = dna_file.clone().into();
     let dna_code = dna_file.code().clone();
 
@@ -68,9 +73,24 @@ pub fn get_zomes(dna_file: DnaFile) -> Result<Vec<(String, ZomeWithCode)>> {
             })
             .collect::<Result<Vec<String>>>()?;
 
+        let ui_bundle = match dna_file_content.zomes.get(&zome_name) {
+            Some(zome_json) => match zome_json.ui_path.clone() {
+                Some(ui_path) => {
+                    let mut zome_file_path = dna_work_dir.clone();
+                    zome_file_path.push(&ui_path);
+
+                    let file_contents = tokio::fs::read(zome_file_path.clone()).await?;
+                    Some(file_contents)
+                }
+                None => None,
+            },
+            None => None,
+        };
+
         zomes.push((
             zome_name.0,
             ZomeWithCode {
+                ui_bundle,
                 wasm_code: wasm_code.clone(),
                 wasm_hash: wasm_zome.wasm_hash.clone(),
                 entry_defs: str_entry_defs,
@@ -86,7 +106,7 @@ pub fn get_zomes(dna_file: DnaFile) -> Result<Vec<(String, ZomeWithCode)>> {
 /// See `holochain_types::dna::zome::Zome`.
 /// This is a helper to convert to json.
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
-struct ZomeJson {
+pub struct ZomeJson {
     pub wasm_path: String,
     pub ui_path: Option<String>,
 }
@@ -98,7 +118,7 @@ struct JsonValueDecodeHelper(pub serde_json::Value);
 /// See `holochain_types::dna::DnaDef`.
 /// This is a helper to convert to json.
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
-struct DnaDefJson {
+pub struct DnaDefJson {
     pub name: String,
     pub uuid: String,
     pub properties: serde_json::Value,

@@ -93,9 +93,9 @@ dependencies = [
 [[package]]
 name = "file_storage"
 version = "0.0.1"
+source = "git+https://github.com/holochain-open-dev/file-storage-module?branch=main#32ba8f55de43c0a388e8bcf262c59e148fb52fe3"
 dependencies = [
  "derive_more",
- "file_storage 0.0.1 (git+https://github.com/holochain-open-dev/file-storage-module?branch=main)",
  "hc_utils",
  "hdk3",
  "serde",
@@ -104,9 +104,9 @@ dependencies = [
 [[package]]
 name = "file_storage"
 version = "0.0.1"
-source = "git+https://github.com/holochain-open-dev/file-storage-module?branch=main#32ba8f55de43c0a388e8bcf262c59e148fb52fe3"
 dependencies = [
  "derive_more",
+ "file_storage 0.0.1 (git+https://github.com/holochain-open-dev/file-storage-module?branch=main)",
  "hc_utils",
  "hdk3",
  "serde",

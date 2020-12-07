@@ -121,7 +121,13 @@ async fn upload_zome(
     )
     .await?;
 
+    let ui_bundle = match zome.ui_bundle {
+        Some(bundle) => Some(upload_ui_bundle(ws, compository_cell_id, bundle).await?),
+        None => None,
+    };
+
     let zome_to_publish = ZomeToPublish {
+        ui_bundle,
         entry_defs: zome.entry_defs,
         required_membrane_proof: zome.required_membrane_proof,
         required_properties: zome.required_properties,
@@ -130,4 +136,23 @@ async fn upload_zome(
     };
 
     Ok(zome_to_publish)
+}
+
+async fn upload_ui_bundle(
+    ws: &mut AppWebsocket,
+    compository_cell_id: &CellId,
+    bundle_contents: Vec<u8>,
+) -> Result<String> {
+    let file_hash = upload_file(
+        ws,
+        compository_cell_id,
+        "bundle.js".into(),
+        "js".into(),
+        &bundle_contents,
+    )
+    .await?;
+
+    println!("Uploaded UI bundle with hash {}", file_hash);
+
+    Ok(file_hash)
 }
