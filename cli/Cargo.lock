@@ -308,6 +308,7 @@ name = "cli"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "hc_utils",
  "holo_hash",
  "holochain",
  "holochain_serialized_bytes",
@@ -1099,6 +1100,17 @@ name = "hashbrown"
 version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d7afe4a420e3fe79967a00898cc1f4db7c8a49a9333a29f8a4bd76a253d5cd04"
+
+[[package]]
+name = "hc_utils"
+version = "0.1.0"
+source = "git+https://github.com/holochain/hc-utils?rev=7f65e8f941b9c003133b265d06f3334a9cd60d54#7f65e8f941b9c003133b265d06f3334a9cd60d54"
+dependencies = [
+ "hdk3",
+ "holo_hash",
+ "serde",
+ "thiserror",
+]
 
 [[package]]
 name = "hdk3"

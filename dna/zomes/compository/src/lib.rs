@@ -1,6 +1,13 @@
-mod zome;
-mod template_dna;
+use hdk3::prelude::*;
 
+mod dna;
+mod zome;
+
+entry_defs![
+    zome::Zome::entry_def(),
+    dna::TemplateDna::entry_def(),
+    Path::entry_def()
+];
 
 /*
 

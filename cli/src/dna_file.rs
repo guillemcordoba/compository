@@ -12,8 +12,13 @@ use holochain_types::{
     dna::{wasm::DnaWasm, DnaDef, DnaFile},
     prelude::SerializedBytes,
 };
-use holochain_zome_types::{entry_def::EntryDefs, zome::ZomeName};
+use holochain_zome_types::{
+    entry_def::{EntryDefId, EntryDefs},
+    zome::ZomeName,
+};
 use std::convert::TryInto;
+
+use crate::types::ZomeWithCode;
 
 pub async fn read_dna(dna_work_dir: &impl AsRef<std::path::Path>) -> Result<DnaFile> {
     let dna_work_dir = dna_work_dir.as_ref().canonicalize()?;
@@ -31,7 +36,7 @@ pub async fn read_dna(dna_work_dir: &impl AsRef<std::path::Path>) -> Result<DnaF
 
 pub fn get_entry_defs(dna_file: DnaFile) -> Result<BTreeMap<ZomeName, EntryDefs>> {
     let ribosome = RealRibosome::new(dna_file);
-    
+
     let entry_defs = ribosome.run_entry_defs(EntryDefsHostAccess, EntryDefsInvocation)?;
 
     match entry_defs {
@@ -40,19 +45,13 @@ pub fn get_entry_defs(dna_file: DnaFile) -> Result<BTreeMap<ZomeName, EntryDefs>
     }
 }
 
-#[derive(Debug, Clone)]
-pub struct Zome {
-    wasm_code: DnaWasm,
-    entry_defs: EntryDefs,
-}
-
-pub fn get_zomes(dna_file: DnaFile) -> Result<Vec<(String, Zome)>> {
+pub fn get_zomes(dna_file: DnaFile) -> Result<Vec<(String, ZomeWithCode)>> {
     let (dna_def, _): (DnaDef, Vec<DnaWasm>) = dna_file.clone().into();
     let dna_code = dna_file.code().clone();
 
     let entry_defs = get_entry_defs(dna_file)?;
 
-    let mut zomes: Vec<(String, Zome)> = vec![];
+    let mut zomes: Vec<(String, ZomeWithCode)> = vec![];
 
     for (zome_name, zome_entry_defs) in entry_defs.into_iter() {
         let wasm_zome = dna_def.get_wasm_zome(&zome_name)?;
@@ -61,25 +60,28 @@ pub fn get_zomes(dna_file: DnaFile) -> Result<Vec<(String, Zome)>> {
             .get(&wasm_zome.wasm_hash)
             .ok_or(anyhow!("Bad dna file"))?;
 
+        let str_entry_defs = zome_entry_defs
+            .into_iter()
+            .map(|entry_def| match entry_def.id {
+                EntryDefId::App(entry_def_id) => Ok(entry_def_id),
+                _ => Err(anyhow!("Bad entry def")),
+            })
+            .collect::<Result<Vec<String>>>()?;
+
         zomes.push((
             zome_name.0,
-            Zome {
+            ZomeWithCode {
                 wasm_code: wasm_code.clone(),
-                entry_defs: zome_entry_defs,
+                wasm_hash: wasm_zome.wasm_hash.clone(),
+                entry_defs: str_entry_defs,
+                required_properties: vec![],
+                required_membrane_proof: false,
             },
         ));
     }
 
     Ok(zomes)
 }
-
-/*
-  input -> workdir/dna.json
-  dna_util::compile_dna_file to get the entry defs
-  get all zomes with code and publish them
-  publish a template_dna
-  Configuration options
-*/
 
 /// See `holochain_types::dna::zome::Zome`.
 /// This is a helper to convert to json.

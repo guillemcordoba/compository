@@ -1,10 +1,11 @@
 use anyhow::{anyhow, Context, Result};
-use holochain::conductor::api::{AppRequest, AppResponse, ZomeCall};
 use holochain_types::cell::CellId;
 use holochain_websocket::{websocket_connect, WebsocketConfig, WebsocketSender};
 use std::sync::Arc;
 use tracing::{instrument, trace};
 use url::Url;
+
+use super::{types::{ClientAppRequest, ClientAppResponse, ClientZomeCall}};
 
 #[derive(Clone)]
 pub struct AppWebsocket {
@@ -21,18 +22,28 @@ impl AppWebsocket {
     }
 
     #[instrument(skip(self), err)]
-    pub async fn call_zome(&mut self, cell_id: &CellId, call: ZomeCall) -> Result<AppResponse> {
-        self.send(AppRequest::ZomeCall(Box::from(call))).await
+    pub async fn app_info(&mut self, installed_app_id: String) -> Result<ClientAppResponse> {
+        self.send(ClientAppRequest::AppInfo { installed_app_id })
+            .await
     }
 
-    async fn send(&mut self, msg: AppRequest) -> Result<AppResponse> {
+    #[instrument(skip(self), err)]
+    pub async fn call_zome(
+        &mut self,
+        cell_id: &CellId,
+        call: ClientZomeCall,
+    ) -> Result<ClientAppResponse> {
+        self.send(ClientAppRequest::ZomeCall(call)).await
+    }
+
+    async fn send(&mut self, msg: ClientAppRequest) -> Result<ClientAppResponse> {
         let response = self
             .tx
             .request(msg)
             .await
             .context("failed to send message")?;
         match response {
-            AppResponse::Error(error) => Err(anyhow!("error: {:?}", error)),
+            ClientAppResponse::Error(error) => Err(anyhow!("error: {:?}", error)),
             _ => {
                 trace!("send successful");
                 Ok(response)
