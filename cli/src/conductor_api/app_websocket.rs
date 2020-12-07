@@ -33,7 +33,7 @@ impl AppWebsocket {
         cell_id: &CellId,
         call: ClientZomeCall,
     ) -> Result<ClientAppResponse> {
-        self.send(ClientAppRequest::ZomeCall(call)).await
+        self.send(ClientAppRequest::ZomeCallInvocation(call)).await
     }
 
     async fn send(&mut self, msg: ClientAppRequest) -> Result<ClientAppResponse> {

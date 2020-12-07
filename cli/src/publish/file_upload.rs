@@ -61,14 +61,13 @@ async fn upload_chunk(
         provenance: compository_cell_id.agent_pubkey().clone(),
         zome_name: "file_storage".into(),
     };
-
     let response = ws.call_zome(compository_cell_id, zome_call).await?;
 
     match response {
-        ClientAppResponse::ZomeCall(bytes) => {
+        ClientAppResponse::ZomeCallInvocation(bytes) => {
             let hash: WrappedEntryHash = bytes.try_into()?;
 
-            Ok(format!("{:?}", hash.0))
+            Ok(format!("{}", hash.0))
         }
         _ => Err(anyhow!("Bad response")),
     }
@@ -118,10 +117,10 @@ async fn create_file(
     let response = ws.call_zome(compository_cell_id, zome_call).await?;
 
     match response {
-        ClientAppResponse::ZomeCall(bytes) => {
+        ClientAppResponse::ZomeCallInvocation(bytes) => {
             let hash: WrappedEntryHash = bytes.try_into()?;
 
-            Ok(format!("{:?}", hash.0))
+            Ok(format!("{}", hash.0))
         }
         _ => Err(anyhow!("Bad response")),
     }

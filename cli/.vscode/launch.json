@@ -7,15 +7,20 @@
     {
       "type": "lldb",
       "request": "launch",
-      "name": "Debug executable 'cli'",
+      "name": "Debug executable 'compository'",
       "cargo": {
-        "args": ["build", "--bin=cli", "--package=cli"],
+        "args": ["build", "--bin=compository", "--package=compository"],
         "filter": {
-          "name": "cli",
+          "name": "compository",
           "kind": "bin"
         }
       },
-      "args": ["-d=/home/guillem/projects/holochain/open-dev/profiles/zome/profiles.dna.workdir/"],
+      "args": [
+        "-w=/home/guillem/projects/holochain/open-dev/profiles/zome/profiles.dna.workdir/",
+        "-i=\"test-app\"",
+        "-u=\"ws://localhost:8888\"",
+        "-c=uhC0kkcx_5Pmwruyql3TdD8VahUdeDK7kErVfWK8Pf50cVJbWhcw"
+      ],
       "cwd": "${workspaceFolder}"
     },
     {

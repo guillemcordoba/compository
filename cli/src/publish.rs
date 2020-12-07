@@ -47,10 +47,12 @@ pub async fn publish_template_dna(
     let response = ws.call_zome(compository_cell_id, zome_call).await?;
 
     match response {
-        ClientAppResponse::ZomeCall(bytes) => {
+        ClientAppResponse::ZomeCallInvocation(bytes) => {
             let hash: WrappedEntryHash = bytes.try_into()?;
+            let str_hash = format!("{}", hash.0);
+            println!("Published template dna with hash {}", str_hash);
 
-            Ok(format!("{:?}", hash.0))
+            Ok(str_hash)
         }
         _ => Err(anyhow!("Bad response")),
     }
@@ -91,10 +93,13 @@ async fn publish_zome(
     let response = ws.call_zome(compository_cell_id, zome_call).await?;
 
     match response {
-        ClientAppResponse::ZomeCall(bytes) => {
+        ClientAppResponse::ZomeCallInvocation(bytes) => {
             let hash: WrappedEntryHash = bytes.try_into()?;
+            let str_hash = format!("{}", hash.0);
 
-            Ok(format!("{:?}", hash.0))
+            println!("Published zome with hash {}", str_hash);
+
+            Ok(str_hash)
         }
         _ => Err(anyhow!("Bad response")),
     }

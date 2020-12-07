@@ -15,11 +15,11 @@ use tracing::instrument;
 #[derive(Debug, StructOpt)]
 #[structopt(name = "compository-publish")]
 struct Opt {
-    #[structopt(short = "w", long = "workdir-to-publish")]
+    #[structopt(short = "w", long = "workdir")]
     workdir: std::path::PathBuf,
     #[structopt(short = "-c", long = "compository-dna-hash")]
     compository_dna_hash: String,
-    #[structopt(short = "u", long = "url-happ")]
+    #[structopt(short = "u", long = "url")]
     url: String,
     #[structopt(short = "i", long = "installed-app-id")]
     installed_app_id: String,
@@ -41,10 +41,14 @@ async fn run() -> Result<()> {
 
     let zomes = get_zomes(dna)?;
 
-    let mut ws = AppWebsocket::connect("ws://localhost:8888".into()).await?;
+    let mut ws = AppWebsocket::connect(opt.url.clone()).await?;
+
+    println!("Connected to the holochain conductor at {}", opt.url);
 
     let compository_cell_id =
         get_compository_cell_id(&mut ws, opt.installed_app_id, opt.compository_dna_hash).await?;
+
+    println!("Connected to compository with {:?}", compository_cell_id);
 
     publish_template_dna(&mut ws, &compository_cell_id, dna_name, zomes).await?;
 
