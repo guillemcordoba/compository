@@ -4,13 +4,8 @@ import { TemplateResult } from 'lit-html';
 
 export type Dictionary<T> = { [key: string]: T };
 
-export interface ComponentDefinition {
-  tag: string;
-  component: Constructor<HTMLElement>;
-}
-
 export interface ComponentsBundle {
-  components: Array<ComponentDefinition>;
+  components: Dictionary<Constructor<HTMLElement>>;
   standalone: Array<StandaloneRenderer>;
   // Key is the entry id
   entryRenderers: Dictionary<EntryRenderer>;
