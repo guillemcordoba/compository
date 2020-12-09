@@ -9,7 +9,7 @@ export interface ComponentDefinition {
 }
 
 export interface ComponentsBundle {
-  component: Array<ComponentDefinition>;
+  components: Array<ComponentDefinition>;
   standalone: Array<StandaloneRenderer>;
   // Key is the entry id
   entryRenderers: Dictionary<EntryRenderer>;

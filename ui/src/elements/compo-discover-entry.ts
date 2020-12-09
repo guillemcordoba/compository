@@ -47,7 +47,7 @@ export abstract class CompoDiscoverEntry extends (ScopedElementsMixin(
       zomeIndex
     );
 
-    for (const component of bundle.component) {
+    for (const component of bundle.components) {
       this.defineScopedElement(component.tag, component.component);
     }
 
