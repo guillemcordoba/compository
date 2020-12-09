@@ -1,7 +1,6 @@
-
 /**
  * Receive DNA_HASH://ENTRY_HASH
- * 
+ *
  * 1. Instantiate discover element
  * 2. Element checks if we have the cell-id installed with AdminWebsocket
  *  2.1. If we don't, go to the compository DNA and fetch the new dna
@@ -15,7 +14,7 @@
 
 /**
  * Blocky:
- * 
+ *
  * 0. List all installed apps with the AdminWebsocket
  * 1. Given an app id and an appwebsocket
  * 2. Get all the elements for all dnas->zomes from the compository
@@ -24,3 +23,8 @@
  * 4. If we have a layout already saved, load it
  * 5. If layout is edited, save layout
  */
+
+export * from './elements/compo-discover-entry';
+export * from './services/compository-service';
+export * from './types/components-bundle';
+export * from './types/dnas';

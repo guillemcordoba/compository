@@ -5,7 +5,7 @@ import '../src/ui-ui.js';
 
 describe('UiUi', () => {
   it('has a default title "Hey there" and counter 5', async () => {
-    const el: UiUi = await fixture(html`
+    const el = await fixture(html`
       <ui-ui></ui-ui>
     `);
 
@@ -14,16 +14,16 @@ describe('UiUi', () => {
   });
 
   it('increases the counter on button click', async () => {
-    const el: UiUi = await fixture(html`
+    const el = await fixture(html`
       <ui-ui></ui-ui>
     `);
-    el.shadowRoot!.querySelector('button')!.click();
+    el.shadowRoot.querySelector('button').click();
 
     expect(el.counter).to.equal(6);
   });
 
   it('can override the title via attribute', async () => {
-    const el: UiUi = await fixture(html`
+    const el = await fixture(html`
       <ui-ui title="attribute title"></ui-ui>
     `);
 
@@ -31,7 +31,7 @@ describe('UiUi', () => {
   });
 
   it('passes the a11y audit', async () => {
-    const el: UiUi = await fixture(html`
+    const el = await fixture(html`
       <ui-ui></ui-ui>
     `);
 
