@@ -1,8 +1,8 @@
 {
-  "name": "ui-ui",
+  "name": "compository",
   "version": "0.0.0",
   "description": "Webcomponent ui-ui following open-wc recommendations",
-  "author": "ui-ui",
+  "author": "guillem.cordoba@gmail.com",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.js",
