@@ -8,7 +8,7 @@ export interface ComponentDefinition {
     component: HTMLElement;
 }
 export interface ComponentsBundle {
-    component: Array<ComponentDefinition>;
+    components: Array<ComponentDefinition>;
     standalone: Array<StandaloneRenderer>;
     entryRenderers: Dictionary<EntryRenderer>;
     entryAttachments: Array<AttachmentRenderer>;
