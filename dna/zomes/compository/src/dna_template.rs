@@ -9,7 +9,7 @@ pub struct ZomeDefReference {
     zome_def_hash: WrappedEntryHash, // TODO: fix this
 }
 
-#[hdk_entry(id = "template")]
+#[hdk_entry(id = "dna_template")]
 pub struct DnaTemplate {
     name: String,
     zome_defs: Vec<ZomeDefReference>,

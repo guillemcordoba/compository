@@ -15,7 +15,7 @@ pub struct ZomeWithCode {
 #[derive(Debug, Clone, Serialize, Deserialize, SerializedBytes)]
 pub struct ZomeToPublish {
     pub wasm_file: String, // Hash of the uploaded file
-    pub components_bundle: Option<String>,
+    pub components_bundle_file: Option<String>,
     pub wasm_hash: WasmHash,
     pub entry_defs: Vec<String>, // Entry definition ID ordered by position in the zome
     pub required_properties: Vec<String>,
@@ -31,10 +31,10 @@ pub struct ZomeReference {
 #[derive(Debug, Clone, Serialize, Deserialize, SerializedBytes)]
 pub struct DnaTemplate {
     pub name: String,
-    pub zomes: Vec<ZomeReference>,
+    pub zome_defs: Vec<ZomeReference>,
 }
 
-#[derive(Serialize, SerializedBytes, Deserialize, Clone)]
+#[derive(Debug, Serialize, SerializedBytes, Deserialize, Clone)]
 pub struct PublishInstantiatedDnaInput {
     pub dna_template_hash: String,
     pub instantiated_dna_hash: String,

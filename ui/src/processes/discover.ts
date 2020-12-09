@@ -76,7 +76,7 @@ export async function discoverComponentsBundle(
 
   const template = await compositoryService.getTemplateForDna(dnaHash);
 
-  const zomeDefHash = template.dnaTemplate.zomes[zomeIndex].zome_def_hash;
+  const zomeDefHash = template.dnaTemplate.zome_defs[zomeIndex].zome_def_hash;
 
   // Fetch the appropriate elements bundle for this zome
   const zomeDef = await compositoryService.getZomeDef(zomeDefHash);

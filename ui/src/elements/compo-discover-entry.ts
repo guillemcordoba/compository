@@ -5,22 +5,22 @@ import {
   discoverComponentsBundle,
   discoverEntryDetails,
 } from '../processes/discover';
-import { ComponentsBundle } from '../types/components-bundle';
-import { CircularProgressBase } from '@material/mwc-circular-progress/mwc-circular-progress-base';
+import { CircularProgress } from '@material/mwc-circular-progress';
+import { deserializeHash } from '@holochain-open-dev/common';
 
 export abstract class CompoDiscoverEntry extends (ScopedElementsMixin(
   LitElement
 ) as any) {
   static get scopedElements() {
     return {
-      'mwc-circular-progress': CircularProgressBase,
+      'mwc-circular-progress': CircularProgress,
     };
   }
 
   @property({ type: String })
   entryUri!: string;
   @property({ type: Array })
-  compositoryCellId!: CellId;
+  compositoryCellId!: [string, string];
 
   abstract _appWebsocket: AppWebsocket;
   abstract _adminWebsocket: AdminWebsocket;
@@ -28,6 +28,11 @@ export abstract class CompoDiscoverEntry extends (ScopedElementsMixin(
   #renderTemplate: TemplateResult | undefined;
 
   async firstUpdated() {
+    const cellId: CellId = [
+      deserializeHash(this.compositoryCellId[0]) as Buffer,
+      deserializeHash(this.compositoryCellId[1]) as Buffer,
+    ];
+    
     const {
       dnaHash,
       zomeIndex,
@@ -36,13 +41,13 @@ export abstract class CompoDiscoverEntry extends (ScopedElementsMixin(
     } = await discoverEntryDetails(
       this._adminWebsocket,
       this._appWebsocket,
-      this.compositoryCellId,
+      cellId,
       this.entryUri
     );
 
     const { bundle, def } = await discoverComponentsBundle(
       this._appWebsocket,
-      this.compositoryCellId,
+      cellId,
       dnaHash,
       zomeIndex
     );

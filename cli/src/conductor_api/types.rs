@@ -15,7 +15,7 @@ pub enum ClientAppRequest {
         /// The InstalledAppId for which to get information
         installed_app_id: InstalledAppId,
     },
-    ZomeCallInvocation(ClientZomeCall),
+    ZomeCall(ClientZomeCall),
 }
 
 /// The data provided across an App interface in order to make a zome call
@@ -51,5 +51,5 @@ pub enum ClientAppResponse {
 
     AppInfo(Option<InstalledApp>),
 
-    ZomeCallInvocation(SerializedBytes),
+    ZomeCall(SerializedBytes),
 }

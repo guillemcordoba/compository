@@ -1,6 +1,6 @@
 export interface DnaTemplate {
   name: string;
-  zomes: Array<ZomeDefReference>;
+  zome_defs: Array<ZomeDefReference>;
 }
 
 export interface ZomeDefReference {

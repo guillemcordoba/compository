@@ -63,7 +63,7 @@ async fn upload_chunk(
     let response = ws.call_zome(compository_cell_id, zome_call).await?;
 
     match response {
-        ClientAppResponse::ZomeCallInvocation(bytes) => {
+        ClientAppResponse::ZomeCall(bytes) => {
             let hash: WrappedEntryHash = bytes.try_into()?;
 
             Ok(format!("{}", hash.0))
@@ -118,7 +118,7 @@ async fn create_file(
     let response = ws.call_zome(compository_cell_id, zome_call).await?;
 
     match response {
-        ClientAppResponse::ZomeCallInvocation(bytes) => {
+        ClientAppResponse::ZomeCall(bytes) => {
             let hash: WrappedEntryHash = bytes.try_into()?;
 
             Ok(format!("{}", hash.0))
