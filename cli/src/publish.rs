@@ -5,7 +5,7 @@ use crate::{
         app_websocket::AppWebsocket,
         types::{ClientAppResponse, ClientZomeCall},
     },
-    types::{TemplateDna, ZomeToPublish, ZomeWithCode},
+    types::{DnaTemplate, ZomeReference, ZomeToPublish, ZomeWithCode},
 };
 use anyhow::{anyhow, Result};
 use hc_utils::WrappedEntryHash;
@@ -29,10 +29,13 @@ pub async fn publish_template_dna(
     let zomes = names
         .into_iter()
         .enumerate()
-        .map(|(index, n)| (n, zomes_hashes[index].clone()))
+        .map(|(index, name)| ZomeReference {
+            name,
+            zome_def_hash: zomes_hashes[index].clone(),
+        })
         .collect();
 
-    let template_dna = TemplateDna {
+    let template_dna = DnaTemplate {
         name: dna_name,
         zomes,
     };
@@ -121,13 +124,13 @@ async fn upload_zome(
     )
     .await?;
 
-    let ui_bundle = match zome.ui_bundle {
-        Some(bundle) => Some(upload_ui_bundle(ws, compository_cell_id, bundle).await?),
+    let components_bundle = match zome.components_bundle {
+        Some(bundle) => Some(upload_components_bundle(ws, compository_cell_id, bundle).await?),
         None => None,
     };
 
     let zome_to_publish = ZomeToPublish {
-        ui_bundle,
+        components_bundle,
         entry_defs: zome.entry_defs,
         required_membrane_proof: zome.required_membrane_proof,
         required_properties: zome.required_properties,
@@ -138,7 +141,7 @@ async fn upload_zome(
     Ok(zome_to_publish)
 }
 
-async fn upload_ui_bundle(
+async fn upload_components_bundle(
     ws: &mut AppWebsocket,
     compository_cell_id: &CellId,
     bundle_contents: Vec<u8>,

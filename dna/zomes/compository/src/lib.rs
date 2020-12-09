@@ -1,13 +1,18 @@
 use hdk3::prelude::*;
 
-mod dna;
-mod zome;
+mod dna_template;
+mod utils;
+mod zome_def;
 
 entry_defs![
-    zome::Zome::entry_def(),
-    dna::TemplateDna::entry_def(),
+    zome_def::ZomeDef::entry_def(),
+    dna_template::DnaTemplate::entry_def(),
     Path::entry_def()
 ];
+
+pub fn err(reason: &str) -> HdkError {
+    HdkError::Wasm(WasmError::CallError(reason.into()))
+}
 
 /*
 

@@ -1,10 +1,18 @@
 use hc_utils::{WrappedDnaHash, WrappedEntryHash};
 use hdk3::prelude::*;
 
-#[hdk_entry(id = "template_dna")]
-pub struct TemplateDna {
+use crate::utils;
+
+#[derive(Serialize, SerializedBytes, Deserialize, Clone)]
+pub struct ZomeDefReference {
     name: String,
-    zomes: Vec<(String, WrappedEntryHash)>,
+    zome_def_hash: WrappedEntryHash, // TODO: fix this
+}
+
+#[hdk_entry(id = "template")]
+pub struct DnaTemplate {
+    name: String,
+    zome_defs: Vec<ZomeDefReference>,
 }
 
 // This goes as link tag from a dna path to the template dna
@@ -23,7 +31,7 @@ pub struct PublishInstantiatedDnaInput {
 }
 
 #[hdk_extern]
-pub fn publish_template_dna(template_dna: TemplateDna) -> ExternResult<WrappedEntryHash> {
+pub fn publish_template_dna(template_dna: DnaTemplate) -> ExternResult<WrappedEntryHash> {
     create_entry(&template_dna)?;
 
     let hash = hash_entry(&template_dna)?;
@@ -50,6 +58,37 @@ pub fn publish_instantiated_dna(input: PublishInstantiatedDnaInput) -> ExternRes
 
     Ok(())
 }
+
+#[derive(Serialize, Deserialize, SerializedBytes)]
+#[serde(rename_all = "camelCase")]
+pub struct GetTemplateOutput {
+    dna_template: DnaTemplate,
+    properties: SerializedBytes,
+    uuid: String,
+}
+#[hdk_extern]
+pub fn get_template_for_dna(dna_hash: WrappedDnaHash) -> ExternResult<GetTemplateOutput> {
+    let path = path_for_dna(dna_hash);
+    let links = get_links(path.hash()?, None)?;
+
+    let link = links
+        .into_inner()
+        .first()
+        .ok_or(crate::err("There is no template for this dna"))?
+        .clone();
+
+    let bytes: SerializedBytes = UnsafeBytes::from(link.tag.0).into();
+    let tag: InstantiatedDnaTag = bytes.try_into()?;
+
+    let dna_template: DnaTemplate = utils::try_get_and_convert(link.target)?;
+    Ok(GetTemplateOutput {
+        dna_template,
+        properties: tag.properties,
+        uuid: tag.uuid,
+    })
+}
+
+/** Helper functions */
 
 fn path_for_dna(dna_hash: WrappedDnaHash) -> Path {
     Path::from(format!("all_instantiated_dnas.{}", dna_hash.0))

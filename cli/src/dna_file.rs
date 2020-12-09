@@ -73,7 +73,7 @@ pub async fn get_zomes(
             })
             .collect::<Result<Vec<String>>>()?;
 
-        let ui_bundle = match dna_file_content.zomes.get(&zome_name) {
+        let components_bundle = match dna_file_content.zomes.get(&zome_name) {
             Some(zome_json) => match zome_json.ui_path.clone() {
                 Some(ui_path) => {
                     let mut zome_file_path = dna_work_dir.clone();
@@ -90,7 +90,7 @@ pub async fn get_zomes(
         zomes.push((
             zome_name.0,
             ZomeWithCode {
-                ui_bundle,
+                components_bundle,
                 wasm_code: wasm_code.clone(),
                 wasm_hash: wasm_zome.wasm_hash.clone(),
                 entry_defs: str_entry_defs,
