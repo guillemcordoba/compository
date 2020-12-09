@@ -53,7 +53,7 @@ export abstract class CompoDiscoverEntry extends (ScopedElementsMixin(
 
     const entryIdStr = def.entry_defs[entryDefIndex];
 
-    this.#renderTemplate = bundle.entryRenderers[entryIdStr](entryHash, null);
+    this.#renderTemplate = bundle.entryRenderers[entryIdStr].render(entryHash);
   }
 
   render() {
