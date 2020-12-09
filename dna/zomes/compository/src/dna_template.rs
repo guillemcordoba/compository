@@ -24,17 +24,17 @@ pub struct InstantiatedDnaTag {
 
 #[derive(Serialize, SerializedBytes, Deserialize, Clone)]
 pub struct PublishInstantiatedDnaInput {
-    template_dna_hash: WrappedEntryHash,
+    dna_template_hash: WrappedEntryHash,
     instantiated_dna_hash: WrappedDnaHash,
     uuid: String,
     properties: SerializedBytes, // TODO: fix this
 }
 
 #[hdk_extern]
-pub fn publish_template_dna(template_dna: DnaTemplate) -> ExternResult<WrappedEntryHash> {
-    create_entry(&template_dna)?;
+pub fn publish_dna_template(dna_template: DnaTemplate) -> ExternResult<WrappedEntryHash> {
+    create_entry(&dna_template)?;
 
-    let hash = hash_entry(&template_dna)?;
+    let hash = hash_entry(&dna_template)?;
 
     Ok(WrappedEntryHash(hash))
 }
@@ -52,7 +52,7 @@ pub fn publish_instantiated_dna(input: PublishInstantiatedDnaInput) -> ExternRes
     let tag_bytes: SerializedBytes = tag.try_into()?;
     create_link(
         path.hash()?,
-        input.template_dna_hash.0,
+        input.dna_template_hash.0,
         tag_bytes.bytes().clone(),
     )?;
 

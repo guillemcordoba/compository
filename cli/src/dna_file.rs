@@ -44,7 +44,7 @@ pub fn get_entry_defs(dna_file: DnaFile) -> Result<BTreeMap<ZomeName, EntryDefs>
 }
 
 pub async fn get_zomes(
-    dna_file_content: DnaDefJson,
+    dna_file_content: &DnaDefJson,
     dna_work_dir: &impl AsRef<std::path::Path>,
 ) -> Result<Vec<(String, ZomeWithCode)>> {
     let dna_work_dir = dna_work_dir.as_ref().canonicalize()?;

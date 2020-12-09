@@ -1,6 +1,6 @@
 use conductor_api::{app_websocket::AppWebsocket, types::ClientAppResponse};
 use holochain_types::{app::InstalledCell, cell::CellId};
-use publish::publish_template_dna;
+use publish::{publish_dna_template, publish_insantiated_dna};
 use structopt::StructOpt;
 
 mod conductor_api;
@@ -39,7 +39,7 @@ async fn run() -> Result<()> {
 
     let dna_name = dna_def_json.name.clone();
 
-    let zomes = get_zomes(dna_def_json, &opt.workdir).await?;
+    let zomes = get_zomes(&dna_def_json, &opt.workdir).await?;
 
     let mut ws = AppWebsocket::connect(opt.url.clone()).await?;
 
@@ -50,7 +50,10 @@ async fn run() -> Result<()> {
 
     println!("Connected to compository with {:?}", compository_cell_id);
 
-    publish_template_dna(&mut ws, &compository_cell_id, dna_name, zomes).await?;
+    let template_hash = publish_dna_template(&mut ws, &compository_cell_id, dna_name, zomes).await?;
+
+    let dna_file = dna_def_json.compile_dna_file(&opt.workdir).await?;
+    publish_insantiated_dna(&mut ws, &compository_cell_id, dna_file, template_hash).await?;
 
     Ok(())
 }

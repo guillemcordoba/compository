@@ -5,17 +5,18 @@ use crate::{
         app_websocket::AppWebsocket,
         types::{ClientAppResponse, ClientZomeCall},
     },
-    types::{DnaTemplate, ZomeReference, ZomeToPublish, ZomeWithCode},
+    types::{DnaTemplate, PublishInstantiatedDnaInput, ZomeReference, ZomeToPublish, ZomeWithCode},
 };
 use anyhow::{anyhow, Result};
 use hc_utils::WrappedEntryHash;
-use holochain_types::cell::CellId;
+use holo_hash::HasHash;
+use holochain_types::{cell::CellId, dna::DnaFile};
 
 use self::file_upload::upload_file;
 
 mod file_upload;
 
-pub async fn publish_template_dna(
+pub async fn publish_dna_template(
     ws: &mut AppWebsocket,
     compository_cell_id: &CellId,
     dna_name: String,
@@ -35,7 +36,7 @@ pub async fn publish_template_dna(
         })
         .collect();
 
-    let template_dna = DnaTemplate {
+    let dna_template = DnaTemplate {
         name: dna_name,
         zomes,
     };
@@ -43,8 +44,8 @@ pub async fn publish_template_dna(
     let zome_call = ClientZomeCall {
         cap: None,
         cell_id: compository_cell_id.clone(),
-        fn_name: "publish_template_dna".into(),
-        payload: template_dna.try_into()?,
+        fn_name: "publish_dna_template".into(),
+        payload: dna_template.try_into()?,
         provenance: compository_cell_id.agent_pubkey().clone(),
         zome_name: "compository".into(),
     };
@@ -78,6 +79,46 @@ pub async fn publish_zomes(
 
     Ok(zomes_hashes)
 }
+
+pub async fn publish_insantiated_dna(
+    ws: &mut AppWebsocket,
+    compository_cell_id: &CellId,
+    dna_file: DnaFile,
+    dna_template_hash: String,
+) -> Result<String> {
+    let instantiated_dna_hash = dna_file.dna.as_hash();
+
+    let input = PublishInstantiatedDnaInput {
+        dna_template_hash,
+        instantiated_dna_hash: format!("{}", instantiated_dna_hash.clone()),
+        uuid: dna_file.dna.uuid.clone(),
+        properties: dna_file.dna.properties.clone(),
+    };
+
+    let zome_call = ClientZomeCall {
+        cap: None,
+        cell_id: compository_cell_id.clone(),
+        fn_name: "publish_instantiated_dna".into(),
+        payload: input.try_into()?,
+        provenance: compository_cell_id.agent_pubkey().clone(),
+        zome_name: "compository".into(),
+    };
+
+    let response = ws.call_zome(compository_cell_id, zome_call).await?;
+
+    match response {
+        ClientAppResponse::ZomeCallInvocation(bytes) => {
+            let hash: WrappedEntryHash = bytes.try_into()?;
+            let str_hash = format!("{}", hash.0);
+            println!("Published instantiated dna with hash {}", str_hash);
+
+            Ok(str_hash)
+        }
+        _ => Err(anyhow!("Bad response")),
+    }
+}
+
+/** Helper functions */
 
 async fn publish_zome(
     ws: &mut AppWebsocket,

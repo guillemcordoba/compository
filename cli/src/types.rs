@@ -33,3 +33,11 @@ pub struct DnaTemplate {
     pub name: String,
     pub zomes: Vec<ZomeReference>,
 }
+
+#[derive(Serialize, SerializedBytes, Deserialize, Clone)]
+pub struct PublishInstantiatedDnaInput {
+    pub dna_template_hash: String,
+    pub instantiated_dna_hash: String,
+    pub uuid: String,
+    pub properties: SerializedBytes, // TODO: fix this
+}
