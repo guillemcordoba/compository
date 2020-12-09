@@ -1,11 +1,12 @@
 import { AppWebsocket, CellId } from '@holochain/conductor-api';
+import { Constructor } from 'lit-element';
 import { TemplateResult } from 'lit-html';
 
 export type Dictionary<T> = { [key: string]: T };
 
 export interface ComponentDefinition {
   tag: string;
-  component: HTMLElement;
+  component: Constructor<HTMLElement>;
 }
 
 export interface ComponentsBundle {
