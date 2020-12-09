@@ -17,8 +17,8 @@ export class CompoDiscoverEntry extends ScopedElementsMixin(LitElement) {
     async firstUpdated() {
         const { dnaHash, zomeIndex, entryDefIndex, entryHash, } = await discoverEntryDetails(this._adminWebsocket, this._appWebsocket, this.compositoryCellId, this.entryUri);
         const { bundle, def } = await discoverComponentsBundle(this._appWebsocket, this.compositoryCellId, dnaHash, zomeIndex);
-        for (const component of bundle.components) {
-            this.defineScopedElement(component.tag, component.component);
+        for (const componentTag of Object.keys(bundle.components)) {
+            this.defineScopedElement(componentTag, bundle.components[componentTag]);
         }
         const entryIdStr = def.entry_defs[entryDefIndex];
         __classPrivateFieldSet(this, _renderTemplate, bundle.entryRenderers[entryIdStr].render(entryHash));
