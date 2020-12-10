@@ -1,3 +1,5 @@
+import { CellId } from '@holochain/conductor-api';
+
 export interface DnaTemplate {
   name: string;
   zome_defs: Array<ZomeDefReference>;
@@ -18,7 +20,7 @@ export interface ZomeDef {
 }
 
 export interface EntryDefLocator {
-  dnaHash: string;
+  cellId: CellId;
   zomeIndex: number;
   entryDefIndex: number;
   entryHash: string;

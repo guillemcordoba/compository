@@ -2,7 +2,7 @@ import { AdminWebsocket, AppWebsocket, CellId } from '@holochain/conductor-api';
 import { CompositoryService } from '../services/compository-service';
 import { serializeHash, HolochainCoreTypes } from '@holochain-open-dev/common';
 import { installDna } from './install-dna';
-import { ComponentsBundle } from '../types/components-bundle';
+import { ScopedRenderers, SetupRenderers } from '../types/components-bundle';
 import { importModuleFromFile } from './import-module-from-file';
 import { EntryDefLocator, ZomeDef } from '../types/dnas';
 
@@ -29,7 +29,7 @@ async function fetchZomeAndEntryIndexes(
   }).App;
 
   return {
-    dnaHash: serializeHash(cellId[0]),
+    cellId,
     zomeIndex: appEntryType.zome_id,
     entryDefIndex: appEntryType.id,
     entryHash,
@@ -63,16 +63,18 @@ export async function discoverEntryDetails(
   return fetchZomeAndEntryIndexes(appWebsocket, cellId, entryHash);
 }
 
-export async function discoverComponentsBundle(
+export async function discoverRenderers(
   appWebsocket: AppWebsocket,
   compositoryCellId: CellId,
-  dnaHash: string,
+  cellId: CellId,
   zomeIndex: number
-): Promise<{ bundle: ComponentsBundle; def: ZomeDef }> {
+): Promise<{ renderers: ScopedRenderers; def: ZomeDef }> {
   const compositoryService = new CompositoryService(
     appWebsocket,
     compositoryCellId
   );
+
+  const dnaHash = serializeHash(cellId[0]);
 
   const template = await compositoryService.getTemplateForDna(dnaHash);
 
@@ -89,8 +91,12 @@ export async function discoverComponentsBundle(
   );
 
   const module = await importModuleFromFile(file);
+  const renderers = await (module.default as SetupRenderers)(
+    appWebsocket,
+    cellId
+  );
   return {
-    bundle: module as ComponentsBundle,
+    renderers,
     def: zomeDef,
   };
 }

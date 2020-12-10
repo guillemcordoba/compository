@@ -1,12 +1,10 @@
 import { AdminWebsocket, AppWebsocket, CellId } from '@holochain/conductor-api';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
-import { html, LitElement, property, TemplateResult } from 'lit-element';
-import {
-  discoverComponentsBundle,
-  discoverEntryDetails,
-} from '../processes/discover';
+import { html, LitElement, property, query, TemplateResult } from 'lit-element';
+import { discoverRenderers, discoverEntryDetails } from '../processes/discover';
 import { CircularProgress } from '@material/mwc-circular-progress';
 import { deserializeHash } from '@holochain-open-dev/common';
+import { CompoScope } from './compo-scope';
 
 export abstract class CompoDiscoverEntry extends (ScopedElementsMixin(
   LitElement
@@ -14,6 +12,7 @@ export abstract class CompoDiscoverEntry extends (ScopedElementsMixin(
   static get scopedElements() {
     return {
       'mwc-circular-progress': CircularProgress,
+      'compo-scope': CompoScope,
     };
   }
 
@@ -25,46 +24,50 @@ export abstract class CompoDiscoverEntry extends (ScopedElementsMixin(
   abstract _appWebsocket: AppWebsocket;
   abstract _adminWebsocket: AdminWebsocket;
 
-  #renderTemplate: TemplateResult | undefined;
+  @property({ type: Boolean })
+  _loading: boolean = true;
+
+  @query('#scope')
+  _scope!: CompoScope;
 
   async firstUpdated() {
-    const cellId: CellId = [
+    const compositoryCellId: CellId = [
       deserializeHash(this.compositoryCellId[0]) as Buffer,
       deserializeHash(this.compositoryCellId[1]) as Buffer,
     ];
-    
+
     const {
-      dnaHash,
+      cellId,
       zomeIndex,
       entryDefIndex,
       entryHash,
     } = await discoverEntryDetails(
       this._adminWebsocket,
       this._appWebsocket,
-      cellId,
+      compositoryCellId,
       this.entryUri
     );
 
-    const { bundle, def } = await discoverComponentsBundle(
+    const { renderers, def } = await discoverRenderers(
       this._appWebsocket,
+      compositoryCellId,
       cellId,
-      dnaHash,
       zomeIndex
     );
 
-    for (const componentTag of Object.keys(bundle.components)) {
-      this.defineScopedElement(componentTag, bundle.components[componentTag]);
-    }
-
     const entryIdStr = def.entry_defs[entryDefIndex];
 
-    this.#renderTemplate = bundle.entryRenderers[entryIdStr].render(entryHash);
+    renderers.entryRenderers[entryIdStr].render(this._scope, entryHash);
+
+    this._loading = false;
   }
 
   render() {
-    if (!this.#renderTemplate)
-      return html`<mwc-circular-progress></mwc-circular-progress>`;
+    if (!this._renderTemplate) return html``;
 
-    return this.#renderTemplate;
+    return html`${this._loading
+        ? html`<mwc-circular-progress></mwc-circular-progress>`
+        : html``}
+      <compo-scope id="scope"></compo-scope> `;
   }
 }
