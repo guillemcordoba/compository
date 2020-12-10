@@ -21,13 +21,15 @@ export interface Renderer {
   name: string;
 }
 export interface StandaloneRenderer extends Renderer {
-  render: (host: LitElement & ScopedElementsHost) => void;
+  render: (host: ScopeHost) => void;
 }
 
 export interface EntryRenderer extends Renderer {
-  render: (host: LitElement & ScopedElementsHost, entryHash: string) => void;
+  render: (host: ScopeHost, entryHash: string) => void;
 }
 
 export interface AttachmentRenderer extends Renderer {
-  render: (host: LitElement & ScopedElementsHost, entryHash: string) => void;
+  render: (host: ScopeHost, entryHash: string) => void;
 }
+
+export type ScopeHost = LitElement & ScopedElementsHost;

@@ -26,5 +26,5 @@
 
 export * from './elements/compo-discover-entry';
 export * from './services/compository-service';
-export * from './types/components-bundle';
+export * from './types/scoped-renderers';
 export * from './types/dnas';
