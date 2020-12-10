@@ -15,7 +15,7 @@ async function fetchZomeAndEntryIndexes(appWebsocket, cellId, entryHash) {
     const create = header.content;
     const appEntryType = create.entry_type.App;
     return {
-        dnaHash: serializeHash(cellId[0]),
+        cellId,
         zomeIndex: appEntryType.zome_id,
         entryDefIndex: appEntryType.id,
         entryHash,
@@ -35,18 +35,20 @@ export async function discoverEntryDetails(adminWebsocket, appWebsocket, composi
     // Fetch information about the entry from its header
     return fetchZomeAndEntryIndexes(appWebsocket, cellId, entryHash);
 }
-export async function discoverComponentsBundle(appWebsocket, compositoryCellId, dnaHash, zomeIndex) {
+export async function discoverRenderers(appWebsocket, compositoryCellId, cellId, zomeIndex) {
     const compositoryService = new CompositoryService(appWebsocket, compositoryCellId);
+    const dnaHash = serializeHash(cellId[0]);
     const template = await compositoryService.getTemplateForDna(dnaHash);
-    const zomeDefHash = template.dnaTemplate.zomes[zomeIndex].zome_def_hash;
+    const zomeDefHash = template.dnaTemplate.zome_defs[zomeIndex].zome_def_hash;
     // Fetch the appropriate elements bundle for this zome
     const zomeDef = await compositoryService.getZomeDef(zomeDefHash);
     if (!zomeDef.components_bundle_file)
         throw new Error('This zome does not have any elements bundle file');
     const file = await compositoryService.downloadFile(zomeDef.components_bundle_file);
     const module = await importModuleFromFile(file);
+    const renderers = await module.default(appWebsocket, cellId);
     return {
-        bundle: module,
+        renderers,
         def: zomeDef,
     };
 }
