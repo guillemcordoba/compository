@@ -1,7 +1,6 @@
 import { AppWebsocket, CellId } from '@holochain/conductor-api';
 import { ScopedElementsHost } from '@open-wc/scoped-elements/types/src/types';
 import { LitElement } from 'lit-element';
-import { TemplateResult } from 'lit-html';
 
 export type Dictionary<T> = { [key: string]: T };
 

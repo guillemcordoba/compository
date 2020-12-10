@@ -6,6 +6,6 @@ export abstract class CompoScope extends (ScopedElementsMixin(
   LitElement
 ) as Constructor<LitElement & ScopedElementsHost>) {
   render() {
-    return html``;
+    return html`<slot></slot>`;
   }
 }
