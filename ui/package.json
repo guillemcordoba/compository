@@ -27,7 +27,8 @@
     "@types/dropzone": "^5.7.3",
     "lit-element": "^2.2.1",
     "lit-html": "^1.1.2",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "scoped-registries": "^0.1.0"
   },
   "devDependencies": {
     "@open-wc/eslint-config": "^4.0.0",
@@ -62,8 +63,7 @@
     "arrowParens": "avoid"
   },
   "husky": {
-    "hooks": {
-    }
+    "hooks": {}
   },
   "lint-staged": {
     "*.ts": [

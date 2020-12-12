@@ -57,9 +57,12 @@ export abstract class CompoDiscoverEntry extends (ScopedElementsMixin(
 
     const entryIdStr = def.entry_defs[entryDefIndex];
     debugger;
-    renderers.entryRenderers[entryIdStr].render(this._scope, entryHash);
+    renderers.entryRenderers[entryIdStr].render(
+      this._scope.customElements,
+      this._scope.shadowRoot as ShadowRoot,
+      entryHash
+    );
 
-    console.log(this._scope.getScopedTagName('hod-calendar-event'))
     this._loading = false;
   }
 
@@ -67,8 +70,6 @@ export abstract class CompoDiscoverEntry extends (ScopedElementsMixin(
     return html`${this._loading
         ? html`<mwc-circular-progress></mwc-circular-progress>`
         : html``}
-      <compo-scope id="scope">
-      <hod-calendar-event></hod-calendar-event>
-      </compo-scope> `;
+      <compo-scope id="scope"> </compo-scope> `;
   }
 }
