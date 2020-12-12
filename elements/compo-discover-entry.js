@@ -24,16 +24,15 @@ export class CompoDiscoverEntry extends ScopedElementsMixin(LitElement) {
         const { cellId, zomeIndex, entryDefIndex, entryHash, } = await discoverEntryDetails(this._adminWebsocket, this._appWebsocket, compositoryCellId, this.entryUri);
         const { renderers, def } = await discoverRenderers(this._appWebsocket, compositoryCellId, cellId, zomeIndex);
         const entryIdStr = def.entry_defs[entryDefIndex];
-        renderers.entryRenderers[entryIdStr].render(this._scope, entryHash);
+        debugger;
+        renderers.entryRenderers[entryIdStr].render(this._scope.customElements, this._scope.shadowRoot, entryHash);
         this._loading = false;
     }
     render() {
-        if (!this._renderTemplate)
-            return html ``;
         return html `${this._loading
             ? html `<mwc-circular-progress></mwc-circular-progress>`
             : html ``}
-      <compo-scope id="scope"></compo-scope> `;
+      <compo-scope id="scope"> </compo-scope> `;
     }
 }
 __decorate([

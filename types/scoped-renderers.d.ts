@@ -14,12 +14,12 @@ export interface Renderer {
     name: string;
 }
 export interface StandaloneRenderer extends Renderer {
-    render: (host: ScopeHost) => void;
+    render: (registry: CustomElementRegistry, root: ShadowRoot) => void;
 }
 export interface EntryRenderer extends Renderer {
-    render: (host: ScopeHost, entryHash: string) => void;
+    render: (registry: CustomElementRegistry, root: ShadowRoot, entryHash: string) => void;
 }
 export interface AttachmentRenderer extends Renderer {
-    render: (host: ScopeHost, entryHash: string) => void;
+    render: (registry: CustomElementRegistry, root: ShadowRoot, entryHash: string) => void;
 }
 export declare type ScopeHost = LitElement & ScopedElementsHost;
