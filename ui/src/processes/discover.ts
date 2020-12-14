@@ -38,15 +38,9 @@ async function fetchZomeAndEntryIndexes(
 
 export async function discoverEntryDetails(
   adminWebsocket: AdminWebsocket,
-  appWebsocket: AppWebsocket,
-  compositoryCellId: CellId,
+  compositoryService: CompositoryService,
   entryUri: string
 ): Promise<EntryDefLocator> {
-  const compositoryService = new CompositoryService(
-    appWebsocket,
-    compositoryCellId
-  );
-
   // For now only <DNA_HASH>://<ENTRY_HASH>
   const [dnaHash, entryHash] = entryUri.split('://');
 
@@ -60,20 +54,18 @@ export async function discoverEntryDetails(
   }
 
   // Fetch information about the entry from its header
-  return fetchZomeAndEntryIndexes(appWebsocket, cellId, entryHash);
+  return fetchZomeAndEntryIndexes(
+    compositoryService.appWebsocket,
+    cellId,
+    entryHash
+  );
 }
 
 export async function discoverRenderers(
-  appWebsocket: AppWebsocket,
-  compositoryCellId: CellId,
+  compositoryService: CompositoryService,
   cellId: CellId,
   zomeIndex: number
 ): Promise<{ renderers: ScopedRenderers; def: ZomeDef }> {
-  const compositoryService = new CompositoryService(
-    appWebsocket,
-    compositoryCellId
-  );
-
   const dnaHash = serializeHash(cellId[0]);
 
   const template = await compositoryService.getTemplateForDna(dnaHash);
@@ -92,7 +84,7 @@ export async function discoverRenderers(
 
   const module = await importModuleFromFile(file);
   const renderers = await (module.default as SetupRenderers)(
-    appWebsocket,
+    compositoryService.appWebsocket,
     cellId
   );
   return {

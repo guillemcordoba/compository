@@ -20,12 +20,10 @@ pub async fn publish_dna_template(
     ws: &mut AppWebsocket,
     compository_cell_id: &CellId,
     dna_name: String,
-    zomes: Vec<(String, ZomeWithCode)>,
+    zomes: Vec<ZomeWithCode>,
 ) -> Result<String> {
-    let names: Vec<String> = zomes.clone().into_iter().map(|z| z.0).collect();
-    let zomes_codes = zomes.into_iter().map(|z| z.1).collect();
-
-    let zomes_hashes = publish_zomes(ws, compository_cell_id, zomes_codes).await?;
+    let names: Vec<String> = zomes.clone().into_iter().map(|z| z.name).collect();
+    let zomes_hashes = publish_zomes(ws, compository_cell_id, zomes).await?;
 
     let zome_defs: Vec<ZomeReference> = names
         .into_iter()
@@ -171,6 +169,7 @@ async fn upload_zome(
     };
 
     let zome_to_publish = ZomeToPublish {
+        name: zome.name.clone(),
         components_bundle_file,
         entry_defs: zome.entry_defs,
         required_membrane_proof: zome.required_membrane_proof,

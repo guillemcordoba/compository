@@ -59,6 +59,11 @@ pub fn publish_instantiated_dna(input: PublishInstantiatedDnaInput) -> ExternRes
     Ok(())
 }
 
+#[hdk_extern]
+pub fn get_dna_template(dna_template_hash: WrappedEntryHash) -> ExternResult<DnaTemplate> {
+    utils::try_get_and_convert(dna_template_hash.0)
+}
+
 #[derive(Serialize, Deserialize, SerializedBytes)]
 #[serde(rename_all = "camelCase")]
 pub struct GetTemplateOutput {

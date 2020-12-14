@@ -4,6 +4,7 @@ use holochain_types::dna::wasm::DnaWasm;
 
 #[derive(Debug, Clone)]
 pub struct ZomeWithCode {
+    pub name: String,
     pub components_bundle: Option<Vec<u8>>,
     pub wasm_code: DnaWasm,
     pub wasm_hash: WasmHash,
@@ -14,6 +15,7 @@ pub struct ZomeWithCode {
 
 #[derive(Debug, Clone, Serialize, Deserialize, SerializedBytes)]
 pub struct ZomeToPublish {
+    pub name: String,
     pub wasm_file: String, // Hash of the uploaded file
     pub components_bundle_file: Option<String>,
     pub wasm_hash: WasmHash,

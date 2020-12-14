@@ -11,6 +11,7 @@ export interface ZomeDefReference {
 }
 
 export interface ZomeDef {
+  name: string;
   wasm_file: string;
   components_bundle_file: string | undefined;
   wasm_hash: string;
@@ -24,4 +25,16 @@ export interface EntryDefLocator {
   zomeIndex: number;
   entryDefIndex: number;
   entryHash: string;
+}
+
+export interface Hashed<T> {
+  hash: string;
+  content: T;
+}
+
+export interface PublishInstantiatedDnaInput {
+  dna_template_hash: string;
+  instantiated_dna_hash: string;
+  uuid: string;
+  properties: any;
 }

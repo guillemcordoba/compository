@@ -12,16 +12,16 @@
  * 7. Instantiate the element with the entry_id
  */
 
- /** 
-  * Stitching zomes
-  * 1. Get all zomes
-  * 2. Select the zomes you want to combine -> blocky and common mandatory for now
-  * 3. Get the files from compository
-  * 4. Bundle the dna together -> properties? zome_wasms as properties?
-  * 5. Download dna
-  * 6. Install the dna with the conductor admin
-  * 7. ???? connect to the UI with blocky as frame
-  * 8. Blocky asks you to create first board using block-board
+/**
+ * Stitching zomes
+ * 1. Get all zomes
+ * 2. Select the zomes you want to combine -> blocky and common mandatory for now
+ * 3. Get the files from compository
+ * 4. Bundle the dna together -> properties? zome_wasms as properties?
+ * 5. Download dna
+ * 6. Install the dna with the conductor admin
+ * 7. ???? connect to the UI with blocky as frame
+ * 8. Blocky asks you to create first board using block-board
  */
 
 /**
@@ -34,14 +34,14 @@
  * 3. Declare them in the block-board ScopedCustomElementsRegistry
  * 4. If we have a layout already saved, load it
  * 5. If layout is edited, save layout
- * 
+ *
  * List of happs you can bring in
- * 
+ *
  */
 
-export * from './elements/compo-discover-entry';
+export * from './elements/compository-discover-entry';
+export * from './elements/compository-scope';
+export * from './elements/compository-compose-zomes';
 export * from './services/compository-service';
 export * from './types/scoped-renderers';
 export * from './types/dnas';
-
-import 'scoped-registries';

@@ -1,7 +1,7 @@
 import { AppWebsocket, CellId } from '@holochain/conductor-api';
 import * as msgpack from '@msgpack/msgpack';
 import { FileStorageService } from '@holochain-open-dev/file-storage';
-import { DnaTemplate, ZomeDef } from '../types/dnas';
+import { DnaTemplate, Hashed, PublishInstantiatedDnaInput, ZomeDef } from '../types/dnas';
 
 export interface GetTemplateForDnaOutput {
   dnaTemplate: DnaTemplate;
@@ -11,11 +11,13 @@ export interface GetTemplateForDnaOutput {
 
 export class CompositoryService extends FileStorageService {
   constructor(
-    protected appWebsocket: AppWebsocket,
+    public appWebsocket: AppWebsocket,
     protected compositoryCellId: CellId
   ) {
     super(appWebsocket, compositoryCellId, 'file_storage');
   }
+
+  /** Getters */
 
   async getTemplateForDna(dnaHash: string): Promise<GetTemplateForDnaOutput> {
     const result = await this.callZome(
@@ -29,6 +31,22 @@ export class CompositoryService extends FileStorageService {
 
   async getZomeDef(zomeDefHash: string): Promise<ZomeDef> {
     return this.callZome('compository', 'get_zome_def', zomeDefHash);
+  }
+  async getDnaTemplate(dnaTemplateHash: string): Promise<DnaTemplate> {
+    return this.callZome('compository', 'get_dna_template', dnaTemplateHash);
+  }
+
+  async getAllZomeDefs(): Promise<Array<Hashed<ZomeDef>>> {
+    return this.callZome('compository', 'get_all_zome_defs', null);
+  }
+
+  /** Creators */
+
+  async publishDnaTemplate(dnaTemplate: DnaTemplate): Promise<string> {
+    return this.callZome('compository', 'publish_dna_template', dnaTemplate)
+  }
+  async publishInstantiatedDna(input: PublishInstantiatedDnaInput): Promise<string> {
+    return this.callZome('compository', 'publish_instantiated_dna', input)
   }
 
   private callZome(zome: string, fnName: string, payload: any) {

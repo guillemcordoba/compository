@@ -9,13 +9,15 @@
     </style>
   </head>
   <body>
-    <compo-discover-entry id="discover">
-    </compo-discover-entry>
-
+    <compository-compose-zomes></compository-compose-zomes>
     <script type="module">
+      import {
+        CompositoryComposeZomes,
+        CompositoryService,
+        CompositoryScope,
+      } from '../dist';
       import ConductorApi from '@holochain/conductor-api';
-      import { CompoDiscoverEntry } from '../dist';
-
+      import { deserializeHash } from '@holochain-open-dev/common';
       (async function () {
         const admin = await ConductorApi.AdminWebsocket.connect(
           'ws://localhost:1234'
@@ -24,26 +26,25 @@
           'ws://localhost:8888'
         );
 
-        customElements.define(
-          'compo-discover-entry',
-          class extends CompoDiscoverEntry {
-            get _appWebsocket() {
-              return app;
-            }
+        const compositoryCellId = [
+          deserializeHash(
+            'uhC0k17jxt5BaQRkGTk2pNbPD7vjL9NPQZwiMTLL5TGWWp2znhbyf'
+          ),
+          deserializeHash(
+            'uhCAkT0Y0TWs4sJvNNte9ynA6qq03y1LicODrFGJYlq_MZhMgN5rD'
+          ),
+        ];
 
-            get _adminWebsocket() {
-              return admin;
+        const service = new CompositoryService(app, compositoryCellId);
+
+        customElements.define(
+          'compository-compose-zomes',
+          class extends CompositoryComposeZomes {
+            get _compositoryService() {
+              return service;
             }
           }
         );
-
-        const discover = document.getElementById('discover');
-        discover.compositoryCellId = [
-          'uhC0klzfnCHj1lb9Br2GcNGIrhc_C_2vtpdmsn97Tz_g7Lnq2lZaV',
-          'uhCAkeqln4cZvYNrclY6-FQGmRcHIwS84J7op6iQBNzln49TBO57r',
-        ];
-        discover.entryUri =
-          'uhC0k9lU6kx3KbLLlahexKb7vrJWVx0MPNEJ2buQbxslSmSA1Wy4Q://uhCEka9vnBeSf955StKJWqEOio3XeUhZqKfpyV-wAVEa_cw9OL5wN';
       })();
     </script>
   </body>

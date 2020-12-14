@@ -1,4 +1,4 @@
-use std::{collections::BTreeMap};
+use std::collections::BTreeMap;
 
 use anyhow::{anyhow, Result};
 use holochain::core::ribosome::{
@@ -46,7 +46,7 @@ pub fn get_entry_defs(dna_file: DnaFile) -> Result<BTreeMap<ZomeName, EntryDefs>
 pub async fn get_zomes(
     dna_file_content: &DnaDefJson,
     dna_work_dir: &impl AsRef<std::path::Path>,
-) -> Result<Vec<(String, ZomeWithCode)>> {
+) -> Result<Vec<ZomeWithCode>> {
     let dna_work_dir = dna_work_dir.as_ref().canonicalize()?;
 
     let dna_file = dna_file_content.compile_dna_file(&dna_work_dir).await?;
@@ -56,7 +56,7 @@ pub async fn get_zomes(
 
     let entry_defs = get_entry_defs(dna_file)?;
 
-    let mut zomes: Vec<(String, ZomeWithCode)> = vec![];
+    let mut zomes: Vec<ZomeWithCode> = vec![];
 
     for (zome_name, zome_entry_defs) in entry_defs.into_iter() {
         let wasm_zome = dna_def.get_wasm_zome(&zome_name)?;
@@ -87,17 +87,15 @@ pub async fn get_zomes(
             None => None,
         };
 
-        zomes.push((
-            zome_name.0,
-            ZomeWithCode {
-                components_bundle,
-                wasm_code: wasm_code.clone(),
-                wasm_hash: wasm_zome.wasm_hash.clone(),
-                entry_defs: str_entry_defs,
-                required_properties: vec![],
-                required_membrane_proof: false,
-            },
-        ));
+        zomes.push(ZomeWithCode {
+            name: zome_name.0,
+            components_bundle,
+            wasm_code: wasm_code.clone(),
+            wasm_hash: wasm_zome.wasm_hash.clone(),
+            entry_defs: str_entry_defs,
+            required_properties: vec![],
+            required_membrane_proof: false,
+        });
     }
 
     Ok(zomes)
