@@ -81,7 +81,7 @@ impl From<Zome> for ZomeDef {
 #[derive(Serialize, Deserialize, Hash, Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 #[repr(transparent)]
 pub struct ZomeDef {
-    pub wasm_hash: Vec<u8>,
+    pub wasm_hash: WasmHash,
 }
 
 /// Access a call has to host functions

@@ -26,6 +26,7 @@ export async function bundleDna(
   ]);
   const codesPromises = zomes.map(zome => zome.file.arrayBuffer());
   const codes = await Promise.all(codesPromises);
+  debugger
 
   // Compress the dna
   const contents = await compress_dna(
@@ -37,7 +38,7 @@ export async function bundleDna(
   );
 
   // Return the contents
-  return new File(contents, 'new_dna.gz');
+  return new File([contents.buffer], 'new_dna.gz', {type: 'application/octet-stream'});
 }
 
 async function fetchZome(

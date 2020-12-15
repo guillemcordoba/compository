@@ -170,6 +170,7 @@ impl DnaFile {
         // TODO: remove
         dna_file.verify_hash().await.expect("TODO, remove");
         let data: SerializedBytes = dna_file.try_into()?;
+
         let mut enc = flate2::write::GzEncoder::new(Vec::new(), flate2::Compression::default());
         use std::io::Write;
         enc.write_all(data.bytes())?;
