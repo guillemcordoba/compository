@@ -26,7 +26,6 @@ export async function bundleDna(
   ]);
   const codesPromises = zomes.map(zome => zome.file.arrayBuffer());
   const codes = await Promise.all(codesPromises);
-  debugger
 
   // Compress the dna
   const contents = await compress_dna(

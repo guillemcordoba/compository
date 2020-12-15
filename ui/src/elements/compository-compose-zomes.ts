@@ -9,26 +9,37 @@ import { CheckListItem } from '@material/mwc-list/mwc-check-list-item';
 import { CircularProgress } from '@material/mwc-circular-progress';
 import { bundleDna } from '../processes/compress-dna';
 import { downloadFile } from '../processes/download-file';
+import { CompositoryInstallDnaDialog } from './compository-install-dna-dialog';
+import { AdminWebsocket } from '@holochain/conductor-api';
 
 export abstract class CompositoryComposeZomes extends Scoped(LitElement) {
   @property()
   zomeDefs!: Array<Hashed<ZomeDef>>;
 
+  @query('#install-dna-dialog')
+  _installDnaDialog!: CompositoryInstallDnaDialog;
+
   _selectedIndexes: Set<number> = new Set();
 
   abstract _compositoryService: CompositoryService;
+  abstract _adminWebsocket: AdminWebsocket;
 
   static get styles() {
     return sharedStyles;
   }
 
-  static get scopedElements() {
+  get scopedElements() {
+    const ws = this._adminWebsocket;
     return {
       'mwc-list': List,
       'mwc-check-list-item': CheckListItem,
-
       'mwc-circular-progress': CircularProgress,
       'mwc-button': Button,
+      'compository-install-dna-dialog': class extends CompositoryInstallDnaDialog {
+        get _adminWebsocket() {
+          return ws;
+        }
+      },
     };
   }
 
@@ -62,29 +73,34 @@ export abstract class CompositoryComposeZomes extends Scoped(LitElement) {
     );
 
     downloadFile(dnaFile);
+
+    this._installDnaDialog.open();
   }
 
   render() {
     if (!this.zomeDefs)
       return html`<mwc-circular-progress></mwc-circular-progress>`;
 
-    return html` <div class="column">
-      <mwc-list
-        multi
-        @selected=${(e: CustomEvent) =>
-          (this._selectedIndexes = e.detail.index)}
-      >
-        ${this.zomeDefs.map(
-          zomeDef => html`
-            <mwc-check-list-item>${zomeDef.content.name}</mwc-check-list-item>
-          `
-        )}
-      </mwc-list>
+    return html` <compository-install-dna-dialog
+        id="install-dna-dialog"
+      ></compository-install-dna-dialog>
+      <div class="column">
+        <mwc-list
+          multi
+          @selected=${(e: CustomEvent) =>
+            (this._selectedIndexes = e.detail.index)}
+        >
+          ${this.zomeDefs.map(
+            zomeDef => html`
+              <mwc-check-list-item>${zomeDef.content.name}</mwc-check-list-item>
+            `
+          )}
+        </mwc-list>
 
-      <mwc-button
-        label="CREATE DNA TEMPLATE"
-        @click=${() => this.createDnaTemplate()}
-      ></mwc-button>
-    </div>`;
+        <mwc-button
+          label="CREATE DNA TEMPLATE"
+          @click=${() => this.createDnaTemplate()}
+        ></mwc-button>
+      </div>`;
   }
 }
