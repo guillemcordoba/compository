@@ -39,7 +39,7 @@ export abstract class CompositoryComposeZomes extends Scoped(LitElement) {
         get _adminWebsocket() {
           return ws;
         }
-      },
+      } as typeof HTMLElement,
     };
   }
 
