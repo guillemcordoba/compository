@@ -2,10 +2,10 @@ import { html, LitElement, property, query } from 'lit-element';
 import { discoverEntryDetails } from '../processes/discover';
 import { CompositoryScope } from './compository-scope';
 import { fetchRenderersForZome } from '../processes/fetch-renderers';
-import { withMembraneContext } from 'holochain-membrane-context';
+import { membraneContext } from 'holochain-membrane-context';
 import { CompositoryService } from '../services/compository-service';
 
-export class CompositoryDiscoverEntry extends withMembraneContext(LitElement) {
+export class CompositoryDiscoverEntry extends membraneContext(LitElement) {
   @property({ type: String })
   entryUri!: string;
 
@@ -16,14 +16,17 @@ export class CompositoryDiscoverEntry extends withMembraneContext(LitElement) {
   _scope!: CompositoryScope;
 
   async firstUpdated() {
-    const compositoryService = new CompositoryService(this.context.membrane.appWebsocket, this.context.membrane.cellId);
+    const compositoryService = new CompositoryService(
+      this.appWebsocket,
+      this.cellId
+    );
     const {
       cellId,
       zomeIndex,
       entryDefIndex,
       entryHash,
     } = await discoverEntryDetails(
-      this.context.membrane.adminWebsocket,
+      this.adminWebsocket,
       compositoryService,
       this.entryUri
     );
