@@ -1,5 +1,5 @@
-import init, { compress_dna } from 'compress_dna';
-export async function bundleDna(compositoryService, dnaTemplateHash, uuid, properties) {
+import init, { bundle_dna } from 'bundle-dna';
+export async function generateDna(compositoryService, dnaTemplateHash, uuid, properties) {
     await init();
     // Get the dna template
     const dnaTemplate = await compositoryService.getDnaTemplate(dnaTemplateHash);
@@ -13,14 +13,16 @@ export async function bundleDna(compositoryService, dnaTemplateHash, uuid, prope
     ]);
     const codesPromises = zomes.map(zome => zome.file.arrayBuffer());
     const codes = await Promise.all(codesPromises);
-    // Compress the dna
-    const contents = await compress_dna(dnaTemplate.name, uuid, properties, argZomes, codes.map(code => ({ code: Array.from(new Uint8Array(code)) })));
+    // Bundle the dna
+    const contents = await bundle_dna(dnaTemplate.name, uuid, properties, argZomes, codes.map(code => ({ code: Array.from(new Uint8Array(code)) })));
     // Return the contents
-    return new File([contents.buffer], 'generated.dna.gz', { type: 'application/octet-stream' });
+    return new File([contents.buffer], 'generated.dna.gz', {
+        type: 'application/octet-stream',
+    });
 }
 async function fetchZome(compositoryService, zomeDefHash) {
     const zomeDef = await compositoryService.getZomeDef(zomeDefHash);
     const file = await compositoryService.downloadFile(zomeDef.wasm_file);
     return { zomeDef, file };
 }
-//# sourceMappingURL=compress-dna.js.map
+//# sourceMappingURL=generate-dna.js.map

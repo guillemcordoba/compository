@@ -6,7 +6,7 @@ import { Button } from '@material/mwc-button';
 import { List } from '@material/mwc-list';
 import { CheckListItem } from '@material/mwc-list/mwc-check-list-item';
 import { CircularProgress } from '@material/mwc-circular-progress';
-import { bundleDna } from '../processes/compress-dna';
+import { generateDna } from '../processes/generate-dna';
 import { downloadFile } from '../processes/download-file';
 import { CompositoryInstallDnaDialog } from './compository-install-dna-dialog';
 export class CompositoryComposeZomes extends Scoped(LitElement) {
@@ -45,7 +45,7 @@ export class CompositoryComposeZomes extends Scoped(LitElement) {
             zome_defs: zomeDefReferences,
         };
         const dnaTemplateHash = await this._compositoryService.publishDnaTemplate(dnaTemplate);
-        const dnaFile = await bundleDna(this._compositoryService, dnaTemplateHash, '', {});
+        const dnaFile = await generateDna(this._compositoryService, dnaTemplateHash, '', {});
         downloadFile(dnaFile);
         this._installDnaDialog.open();
     }
