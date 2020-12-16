@@ -2,13 +2,20 @@ import { LitElement } from 'lit-element';
 import { Dialog } from '@material/mwc-dialog';
 import { Button } from '@material/mwc-button';
 import { TextField } from '@material/mwc-textfield';
-import { AdminWebsocket } from '@holochain/conductor-api';
-declare const CompositoryInstallDnaDialog_base: typeof LitElement & import("lit-element").Constructor<import("scoped-element-mixin/dist/ScopedElementMixin").ScopedElement>;
-export declare abstract class CompositoryInstallDnaDialog extends CompositoryInstallDnaDialog_base {
+declare const CompositoryInstallDnaDialog_base: typeof LitElement & import("lit-element").Constructor<HTMLElement> & {
+    readonly scopedElements: import("scoped-elements").Dictionary<{
+        new (): HTMLElement;
+        prototype: HTMLElement;
+    }>;
+} & import("lit-element").Constructor<{
+    context: {
+        membrane: import("holochain-membrane-context").MembraneContext;
+    };
+}>;
+export declare class CompositoryInstallDnaDialog extends CompositoryInstallDnaDialog_base {
     _dialog: Dialog;
     _dnaPath: string;
-    abstract _adminWebsocket: AdminWebsocket;
-    get scopedElements(): {
+    static get scopedElements(): {
         'mwc-dialog': typeof Dialog;
         'mwc-button': typeof Button;
         'mwc-textfield': typeof TextField;

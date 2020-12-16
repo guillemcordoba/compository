@@ -1,16 +1,13 @@
-import { AdminWebsocket } from '@holochain/conductor-api';
 import { html, LitElement, property, query } from 'lit-element';
 import { discoverEntryDetails } from '../processes/discover';
 import { CompositoryScope } from './compository-scope';
-import { CompositoryService } from '../services/compository-service';
 import { fetchRenderersForZome } from '../processes/fetch-renderers';
+import { withMembraneContext } from 'holochain-membrane-context';
+import { CompositoryService } from '../services/compository-service';
 
-export abstract class CompositoryDiscoverEntry extends LitElement {
+export class CompositoryDiscoverEntry extends withMembraneContext(LitElement) {
   @property({ type: String })
   entryUri!: string;
-
-  abstract _compositoryService: CompositoryService;
-  abstract _adminWebsocket: AdminWebsocket;
 
   @property({ type: Boolean })
   _loading = true;
@@ -19,19 +16,20 @@ export abstract class CompositoryDiscoverEntry extends LitElement {
   _scope!: CompositoryScope;
 
   async firstUpdated() {
+    const compositoryService = new CompositoryService(this.context.membrane.appWebsocket, this.context.membrane.cellId);
     const {
       cellId,
       zomeIndex,
       entryDefIndex,
       entryHash,
     } = await discoverEntryDetails(
-      this._adminWebsocket,
-      this._compositoryService,
+      this.context.membrane.adminWebsocket,
+      compositoryService,
       this.entryUri
     );
 
     const { renderers, def } = await fetchRenderersForZome(
-      this._compositoryService,
+      compositoryService,
       cellId,
       zomeIndex
     );

@@ -1,6 +1,7 @@
 import { __decorate } from "tslib";
 import { html, LitElement, property, query } from 'lit-element';
-import { Scoped } from 'scoped-element-mixin';
+import { Scoped } from 'scoped-elements';
+import { CompositoryService } from '../services/compository-service';
 import { sharedStyles } from './sharedStyles';
 import { Button } from '@material/mwc-button';
 import { List } from '@material/mwc-list';
@@ -9,7 +10,8 @@ import { CircularProgress } from '@material/mwc-circular-progress';
 import { generateDna } from '../processes/generate-dna';
 import { downloadFile } from '../processes/download-file';
 import { CompositoryInstallDnaDialog } from './compository-install-dna-dialog';
-export class CompositoryComposeZomes extends Scoped(LitElement) {
+import { withMembraneContext } from 'holochain-membrane-context';
+export class CompositoryComposeZomes extends withMembraneContext(Scoped(LitElement)) {
     constructor() {
         super(...arguments);
         this._selectedIndexes = new Set();
@@ -17,19 +19,17 @@ export class CompositoryComposeZomes extends Scoped(LitElement) {
     static get styles() {
         return sharedStyles;
     }
-    get scopedElements() {
-        const ws = this._adminWebsocket;
+    static get scopedElements() {
         return {
             'mwc-list': List,
             'mwc-check-list-item': CheckListItem,
             'mwc-circular-progress': CircularProgress,
             'mwc-button': Button,
-            'compository-install-dna-dialog': class extends CompositoryInstallDnaDialog {
-                get _adminWebsocket() {
-                    return ws;
-                }
-            },
+            'compository-install-dna-dialog': CompositoryInstallDnaDialog,
         };
+    }
+    get _compositoryService() {
+        return new CompositoryService(this.context.membrane.appWebsocket, this.context.membrane.cellId);
     }
     async firstUpdated() {
         this.zomeDefs = await this._compositoryService.getAllZomeDefs();
