@@ -1,8 +1,8 @@
-import init, { compress_dna } from 'compress_dna';
+import init, { bundle_dna } from 'bundle-dna';
 import { CompositoryService } from '../services/compository-service';
 import { ZomeDef } from '../types/dnas';
 
-export async function bundleDna(
+export async function generateDna(
   compositoryService: CompositoryService,
   dnaTemplateHash: string,
   uuid: string,
@@ -27,8 +27,8 @@ export async function bundleDna(
   const codesPromises = zomes.map(zome => zome.file.arrayBuffer());
   const codes = await Promise.all(codesPromises);
 
-  // Compress the dna
-  const contents = await compress_dna(
+  // Bundle the dna
+  const contents = await bundle_dna(
     dnaTemplate.name,
     uuid,
     properties,
@@ -37,7 +37,9 @@ export async function bundleDna(
   );
 
   // Return the contents
-  return new File([contents.buffer], 'generated.dna.gz', {type: 'application/octet-stream'});
+  return new File([contents.buffer], 'generated.dna.gz', {
+    type: 'application/octet-stream',
+  });
 }
 
 async function fetchZome(

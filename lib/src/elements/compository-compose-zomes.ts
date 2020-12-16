@@ -7,7 +7,7 @@ import { Button } from '@material/mwc-button';
 import { List, SelectedDetail } from '@material/mwc-list';
 import { CheckListItem } from '@material/mwc-list/mwc-check-list-item';
 import { CircularProgress } from '@material/mwc-circular-progress';
-import { bundleDna } from '../processes/compress-dna';
+import { generateDna } from '../processes/generate-dna';
 import { downloadFile } from '../processes/download-file';
 import { CompositoryInstallDnaDialog } from './compository-install-dna-dialog';
 import { AdminWebsocket } from '@holochain/conductor-api';
@@ -65,7 +65,7 @@ export abstract class CompositoryComposeZomes extends Scoped(LitElement) {
       dnaTemplate
     );
 
-    const dnaFile = await bundleDna(
+    const dnaFile = await generateDna(
       this._compositoryService,
       dnaTemplateHash,
       '',
