@@ -1,6 +1,5 @@
 import { serializeHash } from '@holochain-open-dev/common';
 import { installDna } from './install-dna';
-import { importModuleFromFile } from './import-module-from-file';
 async function fetchZomeAndEntryIndexes(appWebsocket, cellId, entryHash) {
     const details = await appWebsocket.callZome({
         cap: null,
@@ -32,21 +31,5 @@ export async function discoverEntryDetails(adminWebsocket, compositoryService, e
     }
     // Fetch information about the entry from its header
     return fetchZomeAndEntryIndexes(compositoryService.appWebsocket, cellId, entryHash);
-}
-export async function discoverRenderers(compositoryService, cellId, zomeIndex) {
-    const dnaHash = serializeHash(cellId[0]);
-    const template = await compositoryService.getTemplateForDna(dnaHash);
-    const zomeDefHash = template.dnaTemplate.zome_defs[zomeIndex].zome_def_hash;
-    // Fetch the appropriate elements bundle for this zome
-    const zomeDef = await compositoryService.getZomeDef(zomeDefHash);
-    if (!zomeDef.components_bundle_file)
-        throw new Error('This zome does not have any elements bundle file');
-    const file = await compositoryService.downloadFile(zomeDef.components_bundle_file);
-    const module = await importModuleFromFile(file);
-    const renderers = await module.default(compositoryService.appWebsocket, cellId);
-    return {
-        renderers,
-        def: zomeDef,
-    };
 }
 //# sourceMappingURL=discover.js.map

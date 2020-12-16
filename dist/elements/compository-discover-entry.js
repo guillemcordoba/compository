@@ -1,6 +1,7 @@
 import { __decorate } from "tslib";
 import { html, LitElement, property, query } from 'lit-element';
-import { discoverRenderers, discoverEntryDetails } from '../processes/discover';
+import { discoverEntryDetails } from '../processes/discover';
+import { fetchRenderersForZome } from '../processes/fetch-renderers';
 export class CompositoryDiscoverEntry extends LitElement {
     constructor() {
         super(...arguments);
@@ -8,9 +9,9 @@ export class CompositoryDiscoverEntry extends LitElement {
     }
     async firstUpdated() {
         const { cellId, zomeIndex, entryDefIndex, entryHash, } = await discoverEntryDetails(this._adminWebsocket, this._compositoryService, this.entryUri);
-        const { renderers, def } = await discoverRenderers(this._compositoryService, cellId, zomeIndex);
+        const { renderers, def } = await fetchRenderersForZome(this._compositoryService, cellId, zomeIndex);
         const entryIdStr = def.entry_defs[entryDefIndex];
-        renderers.entryRenderers[entryIdStr].render((this._scope.shadowRoot.customElements), this._scope.shadowRoot, entryHash);
+        renderers.entryRenderers[entryIdStr].render(this._scope.shadowRoot.customElements, this._scope.shadowRoot, entryHash);
         this._loading = false;
     }
     render() {

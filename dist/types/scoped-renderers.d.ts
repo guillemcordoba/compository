@@ -1,6 +1,7 @@
 import { AppWebsocket, CellId } from '@holochain/conductor-api';
 import { ScopedElementsHost } from '@open-wc/scoped-elements/types/src/types';
 import { LitElement } from 'lit-element';
+import { ZomeDef } from './dnas';
 export declare type Dictionary<T> = {
     [key: string]: T;
 };
@@ -23,3 +24,7 @@ export interface AttachmentRenderer extends Renderer {
     render: (registry: CustomElementRegistry, root: ShadowRoot, entryHash: string) => void;
 }
 export declare type ScopeHost = LitElement & ScopedElementsHost;
+export interface ZomeRenderers {
+    renderers: ScopedRenderers;
+    def: ZomeDef;
+}

@@ -60,35 +60,3 @@ export async function discoverEntryDetails(
     entryHash
   );
 }
-
-export async function discoverRenderers(
-  compositoryService: CompositoryService,
-  cellId: CellId,
-  zomeIndex: number
-): Promise<{ renderers: ScopedRenderers; def: ZomeDef }> {
-  const dnaHash = serializeHash(cellId[0]);
-
-  const template = await compositoryService.getTemplateForDna(dnaHash);
-
-  const zomeDefHash = template.dnaTemplate.zome_defs[zomeIndex].zome_def_hash;
-
-  // Fetch the appropriate elements bundle for this zome
-  const zomeDef = await compositoryService.getZomeDef(zomeDefHash);
-
-  if (!zomeDef.components_bundle_file)
-    throw new Error('This zome does not have any elements bundle file');
-
-  const file = await compositoryService.downloadFile(
-    zomeDef.components_bundle_file
-  );
-
-  const module = await importModuleFromFile(file);
-  const renderers = await (module.default as SetupRenderers)(
-    compositoryService.appWebsocket,
-    cellId
-  );
-  return {
-    renderers,
-    def: zomeDef,
-  };
-}

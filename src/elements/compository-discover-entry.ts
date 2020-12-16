@@ -1,9 +1,9 @@
-import { AdminWebsocket, AppWebsocket, CellId } from '@holochain/conductor-api';
-import { html, LitElement, property, query, TemplateResult } from 'lit-element';
-import { discoverRenderers, discoverEntryDetails } from '../processes/discover';
-import { deserializeHash } from '@holochain-open-dev/common';
+import { AdminWebsocket } from '@holochain/conductor-api';
+import { html, LitElement, property, query } from 'lit-element';
+import { discoverEntryDetails } from '../processes/discover';
 import { CompositoryScope } from './compository-scope';
 import { CompositoryService } from '../services/compository-service';
+import { fetchRenderersForZome } from '../processes/fetch-renderers';
 
 export abstract class CompositoryDiscoverEntry extends LitElement {
   @property({ type: String })
@@ -30,7 +30,7 @@ export abstract class CompositoryDiscoverEntry extends LitElement {
       this.entryUri
     );
 
-    const { renderers, def } = await discoverRenderers(
+    const { renderers, def } = await fetchRenderersForZome(
       this._compositoryService,
       cellId,
       zomeIndex
@@ -38,7 +38,7 @@ export abstract class CompositoryDiscoverEntry extends LitElement {
 
     const entryIdStr = def.entry_defs[entryDefIndex];
     renderers.entryRenderers[entryIdStr].render(
-      ((this._scope.shadowRoot as any).customElements) as any,
+      (this._scope.shadowRoot as any).customElements as any,
       this._scope.shadowRoot as ShadowRoot,
       entryHash
     );
