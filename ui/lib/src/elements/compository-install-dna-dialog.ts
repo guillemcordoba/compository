@@ -21,7 +21,7 @@ export abstract class CompositoryInstallDnaDialog extends Scoped(LitElement) {
       'mwc-textfield': TextField,
     };
   }
-  open(opened: boolean = true) {
+  open(opened = true) {
     this._dialog.open = opened;
   }
 

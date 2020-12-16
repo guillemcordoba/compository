@@ -13,7 +13,7 @@ export abstract class CompositoryDiscoverEntry extends LitElement {
   abstract _adminWebsocket: AdminWebsocket;
 
   @property({ type: Boolean })
-  _loading: boolean = true;
+  _loading = true;
 
   @query('#scope')
   _scope!: CompositoryScope;

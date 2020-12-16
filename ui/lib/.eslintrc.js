@@ -7,7 +7,7 @@ module.exports = {
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:import/errors',
-    'plugin:import/warnings'
+    'plugin:import/warnings',
   ],
   rules: {
     'no-undef': 'off',
@@ -18,5 +18,6 @@ module.exports = {
     '@typescript-eslint/ban-ts-ignore': 'off',
     'import/named': 'off',
     'import/no-unresolved': 'off',
+    '@typescript-eslint/no-use-before-define': 'off',
   },
 };

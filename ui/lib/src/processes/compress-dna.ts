@@ -37,7 +37,7 @@ export async function bundleDna(
   );
 
   // Return the contents
-  return new File([contents.buffer], 'new_dna.gz', {type: 'application/octet-stream'});
+  return new File([contents.buffer], 'generated.dna.gz', {type: 'application/octet-stream'});
 }
 
 async function fetchZome(
