@@ -45,3 +45,7 @@ export * from './elements/compository-compose-zomes';
 export * from './services/compository-service';
 export * from './types/scoped-renderers';
 export * from './types/dnas';
+export * from './processes/discover';
+export * from './processes/dna-template';
+export * from './processes/fetch-renderers';
+export * from './processes/generate-dna';
