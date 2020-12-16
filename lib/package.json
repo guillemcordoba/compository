@@ -30,10 +30,10 @@
     "@msgpack/msgpack": "^2.3.0",
     "@open-wc/scoped-elements": "^1.3.2",
     "bundle-dna": "git+https://github.com/guillemcordoba/bundle-dna.git#build",
+    "holochain-membrane-context": "git+https://github.com/guillemcordoba/holochain-membrane-context.git",
     "lit-element": "^2.2.1",
     "lit-html": "^1.1.2",
-    "scoped-element-mixin": "git+https://github.com/guillemcordoba/scoped-element-mixin.git",
-    "scoped-registries": "git+https://github.com/manolakis/scoped-registries.git"
+    "scoped-elements": "git+https://github.com/guillemcordoba/scoped-elements.git"
   },
   "devDependencies": {
     "@open-wc/eslint-config": "^4.0.0",

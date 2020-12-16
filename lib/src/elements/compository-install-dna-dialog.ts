@@ -1,20 +1,18 @@
 import { html, LitElement, property, query } from 'lit-element';
-import { Scoped } from 'scoped-element-mixin';
+import { Scoped } from 'scoped-elements';
 import { Dialog } from '@material/mwc-dialog';
 import { Button } from '@material/mwc-button';
 import { TextField } from '@material/mwc-textfield';
-import { AdminWebsocket } from '@holochain/conductor-api';
+import { withMembraneContext } from 'holochain-membrane-context';
 
-export abstract class CompositoryInstallDnaDialog extends Scoped(LitElement) {
+export class CompositoryInstallDnaDialog extends withMembraneContext(Scoped(LitElement)) {
   @query('#dialog')
   _dialog!: Dialog;
 
   @property({ type: String })
   _dnaPath!: string;
 
-  abstract _adminWebsocket: AdminWebsocket;
-
-  get scopedElements() {
+  static get scopedElements() {
     return {
       'mwc-dialog': Dialog,
       'mwc-button': Button,
@@ -26,8 +24,9 @@ export abstract class CompositoryInstallDnaDialog extends Scoped(LitElement) {
   }
 
   async installDna() {
-    const agentKey = await this._adminWebsocket.generateAgentPubKey();
-    const result = await this._adminWebsocket.installApp({
+    const adminWs = this.context.membrane.adminWebsocket;
+    const agentKey = await adminWs.generateAgentPubKey();
+    const result = await adminWs.installApp({
       agent_key: agentKey,
       dnas: [{ nick: '', path: this._dnaPath }],
       installed_app_id: `generated-app-${Date.now() % 1000}`,

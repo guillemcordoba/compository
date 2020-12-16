@@ -1,18 +1,20 @@
 import { html, LitElement, property, query } from 'lit-element';
-import { Scoped } from 'scoped-element-mixin';
+import { Scoped } from 'scoped-elements';
 import { CompositoryService } from '../services/compository-service';
 import { DnaTemplate, Hashed, ZomeDef, ZomeDefReference } from '../types/dnas';
 import { sharedStyles } from './sharedStyles';
 import { Button } from '@material/mwc-button';
-import { List, SelectedDetail } from '@material/mwc-list';
+import { List } from '@material/mwc-list';
 import { CheckListItem } from '@material/mwc-list/mwc-check-list-item';
 import { CircularProgress } from '@material/mwc-circular-progress';
 import { generateDna } from '../processes/generate-dna';
 import { downloadFile } from '../processes/download-file';
 import { CompositoryInstallDnaDialog } from './compository-install-dna-dialog';
-import { AdminWebsocket } from '@holochain/conductor-api';
+import { withMembraneContext } from 'holochain-membrane-context';
 
-export abstract class CompositoryComposeZomes extends Scoped(LitElement) {
+export class CompositoryComposeZomes extends withMembraneContext(
+  Scoped(LitElement)
+) {
   @property()
   zomeDefs!: Array<Hashed<ZomeDef>>;
 
@@ -21,26 +23,25 @@ export abstract class CompositoryComposeZomes extends Scoped(LitElement) {
 
   _selectedIndexes: Set<number> = new Set();
 
-  abstract _compositoryService: CompositoryService;
-  abstract _adminWebsocket: AdminWebsocket;
-
   static get styles() {
     return sharedStyles;
   }
 
-  get scopedElements() {
-    const ws = this._adminWebsocket;
+  static get scopedElements() {
     return {
       'mwc-list': List,
       'mwc-check-list-item': CheckListItem,
       'mwc-circular-progress': CircularProgress,
       'mwc-button': Button,
-      'compository-install-dna-dialog': class extends CompositoryInstallDnaDialog {
-        get _adminWebsocket() {
-          return ws;
-        }
-      } as typeof HTMLElement,
+      'compository-install-dna-dialog': CompositoryInstallDnaDialog,
     };
+  }
+
+  get _compositoryService() {
+    return new CompositoryService(
+      this.context.membrane.appWebsocket,
+      this.context.membrane.cellId
+    );
   }
 
   async firstUpdated() {
