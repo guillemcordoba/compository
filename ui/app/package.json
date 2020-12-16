@@ -14,8 +14,7 @@
     "lint": "eslint --ext .ts,.html . --ignore-path .gitignore",
     "format": "eslint --ext .ts,.html . --fix --ignore-path .gitignore",
     "test": "tsc && web-test-runner --coverage",
-    "test:watch": "web-test-runner --watch",
-    "publish-to-branch": "npm run build && cp package.json dist && gh-pages -d dist -b ui-build"
+    "test:watch": "web-test-runner --watch"
   },
   "dependencies": {
     "compository": "file:../lib",
