@@ -3,9 +3,9 @@ import { Scoped } from 'scoped-elements';
 import { Dialog } from '@material/mwc-dialog';
 import { Button } from '@material/mwc-button';
 import { TextField } from '@material/mwc-textfield';
-import { withMembraneContext } from 'holochain-membrane-context';
+import { membraneContext } from 'holochain-membrane-context';
 
-export class CompositoryInstallDnaDialog extends withMembraneContext(Scoped(LitElement)) {
+export class CompositoryInstallDnaDialog extends membraneContext(Scoped(LitElement)) {
   @query('#dialog')
   _dialog!: Dialog;
 
@@ -24,7 +24,7 @@ export class CompositoryInstallDnaDialog extends withMembraneContext(Scoped(LitE
   }
 
   async installDna() {
-    const adminWs = this.context.membrane.adminWebsocket;
+    const adminWs = this.adminWebsocket;
     const agentKey = await adminWs.generateAgentPubKey();
     const result = await adminWs.installApp({
       agent_key: agentKey,

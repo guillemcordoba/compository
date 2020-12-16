@@ -11,6 +11,9 @@ declare const CompositoryInstallDnaDialog_base: typeof LitElement & import("lit-
     context: {
         membrane: import("holochain-membrane-context").MembraneContext;
     };
+    cellId: import("@holochain/conductor-api").CellId;
+    appWebsocket: import("@holochain/conductor-api").AppWebsocket;
+    adminWebsocket: import("@holochain/conductor-api").AdminWebsocket;
 }>;
 export declare class CompositoryInstallDnaDialog extends CompositoryInstallDnaDialog_base {
     _dialog: Dialog;

@@ -10,8 +10,8 @@ import { CircularProgress } from '@material/mwc-circular-progress';
 import { generateDna } from '../processes/generate-dna';
 import { downloadFile } from '../processes/download-file';
 import { CompositoryInstallDnaDialog } from './compository-install-dna-dialog';
-import { withMembraneContext } from 'holochain-membrane-context';
-export class CompositoryComposeZomes extends withMembraneContext(Scoped(LitElement)) {
+import { membraneContext } from 'holochain-membrane-context';
+export class CompositoryComposeZomes extends membraneContext(Scoped(LitElement)) {
     constructor() {
         super(...arguments);
         this._selectedIndexes = new Set();
@@ -29,7 +29,7 @@ export class CompositoryComposeZomes extends withMembraneContext(Scoped(LitEleme
         };
     }
     get _compositoryService() {
-        return new CompositoryService(this.context.membrane.appWebsocket, this.context.membrane.cellId);
+        return new CompositoryService(this.appWebsocket, this.cellId);
     }
     async firstUpdated() {
         this.zomeDefs = await this._compositoryService.getAllZomeDefs();

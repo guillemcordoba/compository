@@ -15,6 +15,9 @@ declare const CompositoryComposeZomes_base: typeof LitElement & import("lit-elem
     context: {
         membrane: import("holochain-membrane-context").MembraneContext;
     };
+    cellId: import("@holochain/conductor-api").CellId;
+    appWebsocket: import("@holochain/conductor-api").AppWebsocket;
+    adminWebsocket: import("@holochain/conductor-api").AdminWebsocket;
 }>;
 export declare class CompositoryComposeZomes extends CompositoryComposeZomes_base {
     zomeDefs: Array<Hashed<ZomeDef>>;

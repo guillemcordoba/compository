@@ -2,16 +2,16 @@ import { __decorate } from "tslib";
 import { html, LitElement, property, query } from 'lit-element';
 import { discoverEntryDetails } from '../processes/discover';
 import { fetchRenderersForZome } from '../processes/fetch-renderers';
-import { withMembraneContext } from 'holochain-membrane-context';
+import { membraneContext } from 'holochain-membrane-context';
 import { CompositoryService } from '../services/compository-service';
-export class CompositoryDiscoverEntry extends withMembraneContext(LitElement) {
+export class CompositoryDiscoverEntry extends membraneContext(LitElement) {
     constructor() {
         super(...arguments);
         this._loading = true;
     }
     async firstUpdated() {
-        const compositoryService = new CompositoryService(this.context.membrane.appWebsocket, this.context.membrane.cellId);
-        const { cellId, zomeIndex, entryDefIndex, entryHash, } = await discoverEntryDetails(this.context.membrane.adminWebsocket, compositoryService, this.entryUri);
+        const compositoryService = new CompositoryService(this.appWebsocket, this.cellId);
+        const { cellId, zomeIndex, entryDefIndex, entryHash, } = await discoverEntryDetails(this.adminWebsocket, compositoryService, this.entryUri);
         const { renderers, def } = await fetchRenderersForZome(compositoryService, cellId, zomeIndex);
         const entryIdStr = def.entry_defs[entryDefIndex];
         renderers.entryRenderers[entryIdStr].render(this._scope.shadowRoot.customElements, this._scope.shadowRoot, entryHash);
