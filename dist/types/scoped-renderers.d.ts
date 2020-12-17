@@ -15,13 +15,13 @@ export interface Renderer {
     name: string;
 }
 export interface StandaloneRenderer extends Renderer {
-    render: (registry: CustomElementRegistry, root: ShadowRoot) => void;
+    render: (root: ShadowRoot, registry: CustomElementRegistry) => void;
 }
 export interface EntryRenderer extends Renderer {
-    render: (registry: CustomElementRegistry, root: ShadowRoot, entryHash: string) => void;
+    render: (root: ShadowRoot, registry: CustomElementRegistry, entryHash: string) => void;
 }
 export interface AttachmentRenderer extends Renderer {
-    render: (registry: CustomElementRegistry, root: ShadowRoot, entryHash: string) => void;
+    render: (root: ShadowRoot, registry: CustomElementRegistry, entryHash: string) => void;
 }
 export declare type ScopeHost = LitElement & ScopedElementsHost;
 export interface ZomeRenderers {

@@ -14,7 +14,7 @@ export class CompositoryDiscoverEntry extends membraneContext(LitElement) {
         const { cellId, zomeIndex, entryDefIndex, entryHash, } = await discoverEntryDetails(this.adminWebsocket, compositoryService, this.entryUri);
         const { renderers, def } = await fetchRenderersForZome(compositoryService, cellId, zomeIndex);
         const entryIdStr = def.entry_defs[entryDefIndex];
-        renderers.entryRenderers[entryIdStr].render(this._scope.shadowRoot.customElements, this._scope.shadowRoot, entryHash);
+        renderers.entryRenderers[entryIdStr].render(this._scope.shadowRoot, this._scope.shadowRoot.customElements, entryHash);
         this._loading = false;
     }
     render() {
