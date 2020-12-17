@@ -39,8 +39,8 @@ export class CompositoryDiscoverEntry extends membraneContext(LitElement) {
 
     const entryIdStr = def.entry_defs[entryDefIndex];
     renderers.entryRenderers[entryIdStr].render(
-      (this._scope.shadowRoot as any).customElements as any,
       this._scope.shadowRoot as ShadowRoot,
+      (this._scope.shadowRoot as any).customElements as any,
       entryHash
     );
 
