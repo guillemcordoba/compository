@@ -4,6 +4,7 @@ import { CompositoryScope } from './compository-scope';
 import { fetchRenderersForZome } from '../processes/fetch-renderers';
 import { membraneContext } from 'holochain-membrane-context';
 import { CompositoryService } from '../services/compository-service';
+import { AdminWebsocket } from '@holochain/conductor-api';
 
 export class CompositoryDiscoverEntry extends membraneContext(LitElement) {
   @property({ type: String })
@@ -26,7 +27,7 @@ export class CompositoryDiscoverEntry extends membraneContext(LitElement) {
       entryDefIndex,
       entryHash,
     } = await discoverEntryDetails(
-      this.adminWebsocket,
+      this.adminWebsocket as AdminWebsocket,
       compositoryService,
       this.entryUri
     );
