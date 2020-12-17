@@ -9,15 +9,16 @@
     </style>
   </head>
   <body>
-    <compository-compose-zomes></compository-compose-zomes>
+    <holochain-membrane-context id="membrane-context">
+      <compository-app></compository-app>
+    </holochain-membrane-context>
     <script type="module">
-      import {
-        CompositoryComposeZomes,
-        CompositoryService,
-        CompositoryScope,
-      } from '../dist';
+      import { CompositoryApp } from '../dist';
       import ConductorApi from '@holochain/conductor-api';
       import { deserializeHash } from '@holochain-open-dev/common';
+      import { scopeElement } from 'scoped-elements';
+      import { HolochainMembraneContext } from 'holochain-membrane-context';
+
       (async function () {
         const admin = await ConductorApi.AdminWebsocket.connect(
           'ws://localhost:1234'
@@ -35,19 +36,17 @@
           ),
         ];
 
-        const service = new CompositoryService(app, compositoryCellId);
-
+        customElements.define('compository-app', scopeElement(CompositoryApp));
         customElements.define(
-          'compository-compose-zomes',
-          class extends CompositoryComposeZomes {
-            get _compositoryService() {
-              return service;
-            }
-            get _adminWebsocket() {
-              return admin;
-            }
-          }
+          'holochain-membrane-context',
+          HolochainMembraneContext
         );
+
+        const context = document.getElementById('membrane-context');
+
+        context.cellId = compositoryCellId;
+        context.appWebsocket = app;
+        context.adminWebsocket = admin;
       })();
     </script>
   </body>
