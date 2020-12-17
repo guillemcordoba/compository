@@ -5,10 +5,8 @@ export default {
   watch: true,
   nodeResolve: {
     browser: true,
-    moduleDirectories: ['app/node_modules'],
   },
-  rootDir: '../',
-  appIndex: 'app/demo/index.html',
+  appIndex: 'demo/index.html',
   open: true,
   plugins,
 };
