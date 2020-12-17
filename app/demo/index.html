@@ -12,6 +12,7 @@
     <holochain-membrane-context id="membrane-context">
       <compository-app></compository-app>
     </holochain-membrane-context>
+
     <script type="module">
       import { CompositoryApp } from '../dist';
       import ConductorApi from '@holochain/conductor-api';
@@ -32,11 +33,10 @@
             'uhC0k17jxt5BaQRkGTk2pNbPD7vjL9NPQZwiMTLL5TGWWp2znhbyf'
           ),
           deserializeHash(
-            'uhCAkDH5zRtzbDDcpH9oXnL3rTuMTD499speN3gOu96aZj8JDxdBw'
+            'uhCAk6oyEXNFNNrVVXCYY5s2UWlXbxpmk_H2v2eDPrGS7pV_otMCW'
           ),
         ];
 
-        customElements.define('compository-app', scopeElement(CompositoryApp));
         customElements.define(
           'holochain-membrane-context',
           HolochainMembraneContext
@@ -47,6 +47,12 @@
         context.cellId = compositoryCellId;
         context.appWebsocket = app;
         context.adminWebsocket = admin;
+        setTimeout(() => {
+          customElements.define(
+            'compository-app',
+            scopeElement(CompositoryApp)
+          );
+        }, 1000);
       })();
     </script>
   </body>

@@ -16,6 +16,11 @@ export class CompositoryApp extends membraneContext(Scoped(LitElement)) {
     };
   }
 
+  connectedCallback() {
+    debugger
+    super.connectedCallback()
+  }
+
   onCellInstalled(e: CustomEvent) {
     this.generatedCellIdToShow = e.detail.cellId;
   }
