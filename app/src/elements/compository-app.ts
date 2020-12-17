@@ -3,8 +3,9 @@ import { Scoped } from 'scoped-elements';
 import { BlockyBlockBoard } from 'blocky';
 import { CompositoryComposeZomes } from './compository-compose-zomes';
 import { CellId } from '@holochain/conductor-api';
+import { membraneContext } from 'holochain-membrane-context';
 
-export class CompositoryApp extends Scoped(LitElement) {
+export class CompositoryApp extends membraneContext(Scoped(LitElement)) {
   @property({ type: Array })
   generatedCellIdToShow: CellId | undefined = undefined;
 
@@ -25,6 +26,7 @@ export class CompositoryApp extends Scoped(LitElement) {
         ? html`
             <blocky-block-board
               .cellId=${this.generatedCellIdToShow}
+              .compositoryCellId=${this.cellId}
             ></blocky-block-board>
           `
         : html`

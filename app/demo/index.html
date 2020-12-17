@@ -17,7 +17,8 @@
       import { CompositoryApp } from '../dist';
       import ConductorApi from '@holochain/conductor-api';
       import { deserializeHash } from '@holochain-open-dev/common';
-      import { scopeElement } from 'scoped-elements/dist/scoped';
+//      import { scopeElement } from 'scoped-elements/dist/scoped';
+      import { defineGlobalElements } from 'scoped-elements/dist/global';
       import { HolochainMembraneContext } from 'holochain-membrane-context';
 
       (async function () {
@@ -47,7 +48,8 @@
         context.cellId = compositoryCellId;
         context.appWebsocket = app;
         context.adminWebsocket = admin;
-        customElements.define('compository-app', scopeElement(CompositoryApp));
+        defineGlobalElements({ 'compository-app': CompositoryApp });
+        //customElements.define('compository-app', scopeElement(CompositoryApp));
       })();
     </script>
   </body>
