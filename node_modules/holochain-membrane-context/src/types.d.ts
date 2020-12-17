@@ -1,1 +1,1 @@
-declare module 'wc-context';
+declare module 'lit-element-context';

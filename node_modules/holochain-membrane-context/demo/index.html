@@ -13,13 +13,12 @@
       ><mock-consumer></mock-consumer>
     </holochain-membrane-context>
     <script type="module">
-      import { HolochainMembraneContext, withMembraneContext } from '../dist';
+      import { HolochainMembraneContext, membraneContext } from '../dist';
       import { LitElement, html } from 'lit-element';
 
       (async function () {
         const admin = 'adminMock';
         const app = 'appMock';
-
         const cellId = [[], []];
 
         customElements.define(
@@ -29,9 +28,9 @@
 
         customElements.define(
           'mock-consumer',
-          class extends withMembraneContext(LitElement) {
+          class extends membraneContext(LitElement) {
             render() {
-              return html`<span>${this.context.membrane.appWebsocket}</span>`;
+              return html`<span>${this.appWebsocket}</span>`;
             }
           }
         );

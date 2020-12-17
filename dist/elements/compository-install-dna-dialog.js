@@ -1,9 +1,9 @@
 import { __decorate } from "tslib";
 import { html, LitElement, property, query } from 'lit-element';
 import { Scoped } from 'scoped-elements';
-import { Dialog } from '@material/mwc-dialog';
-import { Button } from '@material/mwc-button';
-import { TextField } from '@material/mwc-textfield';
+import { Dialog } from 'scoped-material-components/dist/mwc-dialog';
+import { Button } from 'scoped-material-components/dist/mwc-button';
+import { TextField } from 'scoped-material-components/dist/mwc-textfield';
 import { membraneContext } from 'holochain-membrane-context';
 export class CompositoryInstallDnaDialog extends membraneContext(Scoped(LitElement)) {
     static get scopedElements() {
