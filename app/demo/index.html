@@ -47,12 +47,7 @@
         context.cellId = compositoryCellId;
         context.appWebsocket = app;
         context.adminWebsocket = admin;
-        setTimeout(() => {
-          customElements.define(
-            'compository-app',
-            scopeElement(CompositoryApp)
-          );
-        }, 1000);
+        customElements.define('compository-app', scopeElement(CompositoryApp));
       })();
     </script>
   </body>

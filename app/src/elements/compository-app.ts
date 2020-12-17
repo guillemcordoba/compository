@@ -1,11 +1,10 @@
 import { html, LitElement, property } from 'lit-element';
 import { Scoped } from 'scoped-elements';
-import { membraneContext } from 'holochain-membrane-context';
 import { BlockyBlockBoard } from 'blocky';
-import { CompositoryComposeZomes } from 'compository';
+import { CompositoryComposeZomes } from './compository-compose-zomes';
 import { CellId } from '@holochain/conductor-api';
 
-export class CompositoryApp extends membraneContext(Scoped(LitElement)) {
+export class CompositoryApp extends Scoped(LitElement) {
   @property({ type: Array })
   generatedCellIdToShow: CellId | undefined = undefined;
 
@@ -14,11 +13,6 @@ export class CompositoryApp extends membraneContext(Scoped(LitElement)) {
       'compository-compose-zomes': CompositoryComposeZomes,
       'blocky-block-board': BlockyBlockBoard,
     };
-  }
-
-  connectedCallback() {
-    debugger
-    super.connectedCallback()
   }
 
   onCellInstalled(e: CustomEvent) {

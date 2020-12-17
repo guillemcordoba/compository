@@ -1,9 +1,10 @@
 import { html, LitElement, property, query } from 'lit-element';
 import { Scoped } from 'scoped-elements';
-import { Dialog } from '@material/mwc-dialog';
-import { Button } from '@material/mwc-button';
-import { TextField } from '@material/mwc-textfield';
+import { Dialog } from 'scoped-material-components/dist/mwc-dialog';
+import { Button } from 'scoped-material-components/dist/mwc-button';
+import { TextField } from 'scoped-material-components/dist/mwc-textfield';
 import { membraneContext } from 'holochain-membrane-context';
+import { AdminWebsocket } from '@holochain/conductor-api';
 
 export class CompositoryInstallDnaDialog extends membraneContext(Scoped(LitElement)) {
   @query('#dialog')
@@ -24,7 +25,7 @@ export class CompositoryInstallDnaDialog extends membraneContext(Scoped(LitEleme
   }
 
   async installDna() {
-    const adminWs = this.adminWebsocket;
+    const adminWs = this.adminWebsocket as AdminWebsocket;
     const agentKey = await adminWs.generateAgentPubKey();
     const result = await adminWs.installApp({
       agent_key: agentKey,

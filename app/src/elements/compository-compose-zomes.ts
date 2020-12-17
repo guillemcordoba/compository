@@ -1,7 +1,5 @@
 import { html, LitElement, property, query } from 'lit-element';
 import { Scoped } from 'scoped-elements';
-import { Button } from '@material/mwc-button';
-import { List } from '@material/mwc-list';
 import {
   DnaTemplate,
   Hashed,
@@ -12,9 +10,12 @@ import {
   downloadFile,
   CompositoryInstallDnaDialog,
 } from 'compository';
-import { CheckListItem } from '@material/mwc-list/mwc-check-list-item';
-import { CircularProgress } from '@material/mwc-circular-progress';
+import { List } from 'scoped-material-components/dist/mwc-list';
+import { Button } from 'scoped-material-components/dist/mwc-button';
+import { CheckListItem } from 'scoped-material-components/dist/mwc-check-list-item';
+import { CircularProgress } from 'scoped-material-components/dist/mwc-circular-progress';
 import { membraneContext } from 'holochain-membrane-context';
+import { sharedStyles } from './sharedStyles';
 
 export class CompositoryComposeZomes extends membraneContext(
   Scoped(LitElement)
@@ -43,6 +44,10 @@ export class CompositoryComposeZomes extends membraneContext(
 
   get _compositoryService() {
     return new CompositoryService(this.appWebsocket, this.cellId);
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
   }
 
   async firstUpdated() {
