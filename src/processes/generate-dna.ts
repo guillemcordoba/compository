@@ -3,12 +3,13 @@ import { CompositoryService } from '../services/compository-service';
 import { ZomeDef } from '../types/dnas';
 
 export async function generateDna(
+  wasmUrl: string,
   compositoryService: CompositoryService,
   dnaTemplateHash: string,
   uuid: string,
   properties: any
 ): Promise<File> {
-  await init();
+  await init(wasmUrl);
 
   // Get the dna template
   const dnaTemplate = await compositoryService.getDnaTemplate(dnaTemplateHash);
@@ -28,7 +29,7 @@ export async function generateDna(
   const codes = await Promise.all(codesPromises);
 
   // Bundle the dna
-  const contents = await bundle_dna(
+  const { bundled_dna_file, dna_hash } = await bundle_dna(
     dnaTemplate.name,
     uuid,
     properties,
@@ -36,8 +37,15 @@ export async function generateDna(
     codes.map(code => ({ code: Array.from(new Uint8Array(code)) }))
   );
 
+  await compositoryService.publishInstantiatedDna({
+    dna_template_hash: dnaTemplateHash,
+    instantiated_dna_hash: dna_hash,
+    properties,
+    uuid,
+  });
+
   // Return the contents
-  return new File([contents.buffer], 'generated.dna.gz', {
+  return new File([bundled_dna_file.buffer], 'generated.dna.gz', {
     type: 'application/octet-stream',
   });
 }

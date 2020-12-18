@@ -1,6 +1,6 @@
 import init, { bundle_dna } from 'bundle-dna';
-export async function generateDna(compositoryService, dnaTemplateHash, uuid, properties) {
-    await init();
+export async function generateDna(wasmUrl, compositoryService, dnaTemplateHash, uuid, properties) {
+    await init(wasmUrl);
     // Get the dna template
     const dnaTemplate = await compositoryService.getDnaTemplate(dnaTemplateHash);
     // Fetch all zomes for that template
@@ -14,9 +14,15 @@ export async function generateDna(compositoryService, dnaTemplateHash, uuid, pro
     const codesPromises = zomes.map(zome => zome.file.arrayBuffer());
     const codes = await Promise.all(codesPromises);
     // Bundle the dna
-    const contents = await bundle_dna(dnaTemplate.name, uuid, properties, argZomes, codes.map(code => ({ code: Array.from(new Uint8Array(code)) })));
+    const { bundled_dna_file, dna_hash } = await bundle_dna(dnaTemplate.name, uuid, properties, argZomes, codes.map(code => ({ code: Array.from(new Uint8Array(code)) })));
+    await compositoryService.publishInstantiatedDna({
+        dna_template_hash: dnaTemplateHash,
+        instantiated_dna_hash: dna_hash,
+        properties,
+        uuid,
+    });
     // Return the contents
-    return new File([contents.buffer], 'generated.dna.gz', {
+    return new File([bundled_dna_file.buffer], 'generated.dna.gz', {
         type: 'application/octet-stream',
     });
 }
