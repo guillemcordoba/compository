@@ -26,6 +26,8 @@ export class CompositoryInstallDnaDialog extends membraneContext(Scoped(LitEleme
         });
         this.dispatchEvent(new CustomEvent('dna-installed', {
             detail: { cellId: result.cell_data[0][0] },
+            bubbles: true,
+            composed: true,
         }));
         this.open(false);
     }
