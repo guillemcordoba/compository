@@ -16,6 +16,7 @@ import { CheckListItem } from 'scoped-material-components/dist/mwc-check-list-it
 import { CircularProgress } from 'scoped-material-components/dist/mwc-circular-progress';
 import { membraneContext } from 'holochain-membrane-context';
 import { sharedStyles } from './sharedStyles';
+import { AppWebsocket, CellId } from '@holochain/conductor-api';
 
 export class CompositoryComposeZomes extends membraneContext(
   Scoped(LitElement)
@@ -43,7 +44,7 @@ export class CompositoryComposeZomes extends membraneContext(
   }
 
   get _compositoryService() {
-    return new CompositoryService(this.appWebsocket, this.cellId);
+    return new CompositoryService(this.appWebsocket as AppWebsocket, this.cellId as CellId);
   }
 
   connectedCallback() {
@@ -73,10 +74,11 @@ export class CompositoryComposeZomes extends membraneContext(
     );
 
     const dnaFile = await generateDna(
+      '/node_modules/bundle_dna/bundle_dna_bg.wasm',
       this._compositoryService,
       dnaTemplateHash,
       '',
-      {}
+      []
     );
 
     downloadFile(dnaFile);

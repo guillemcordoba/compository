@@ -6,7 +6,9 @@ import { TextField } from 'scoped-material-components/dist/mwc-textfield';
 import { membraneContext } from 'holochain-membrane-context';
 import { AdminWebsocket } from '@holochain/conductor-api';
 
-export class CompositoryInstallDnaDialog extends membraneContext(Scoped(LitElement)) {
+export class CompositoryInstallDnaDialog extends membraneContext(
+  Scoped(LitElement)
+) {
   @query('#dialog')
   _dialog!: Dialog;
 
@@ -36,6 +38,8 @@ export class CompositoryInstallDnaDialog extends membraneContext(Scoped(LitEleme
     this.dispatchEvent(
       new CustomEvent('dna-installed', {
         detail: { cellId: result.cell_data[0][0] },
+        bubbles: true,
+        composed: true,
       })
     );
     this.open(false);

@@ -3,22 +3,29 @@
   <head>
     <meta charset="utf-8" />
     <style>
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+      }
       body {
         background: #fafafa;
+        display: flex;
       }
     </style>
   </head>
   <body>
     <holochain-membrane-context id="membrane-context">
-      <compository-app></compository-app>
+      <compository-app style="flex: 1"></compository-app>
     </holochain-membrane-context>
 
     <script type="module">
       import { CompositoryApp } from '../dist';
       import ConductorApi from '@holochain/conductor-api';
       import { deserializeHash } from '@holochain-open-dev/common';
-//      import { scopeElement } from 'scoped-elements/dist/scoped';
-      import { defineGlobalElements } from 'scoped-elements/dist/global';
+      import { scopeElement } from 'scoped-elements/dist/scoped';
+      //import { defineGlobalElements } from 'scoped-elements/dist/global';
       import { HolochainMembraneContext } from 'holochain-membrane-context';
 
       (async function () {
@@ -34,7 +41,7 @@
             'uhC0k17jxt5BaQRkGTk2pNbPD7vjL9NPQZwiMTLL5TGWWp2znhbyf'
           ),
           deserializeHash(
-            'uhCAk0CEuGj9a7eXdEjBTwBtwUzCgrwYAnLkwQ8I-MCbAx_kAjW0h'
+            'uhCAkMoKqRPZUByIO1T8I0Z3UhVQabVspJ2__rFrhcdy-xreA_rkm'
           ),
         ];
 
@@ -48,8 +55,8 @@
         context.cellId = compositoryCellId;
         context.appWebsocket = app;
         context.adminWebsocket = admin;
-        defineGlobalElements({ 'compository-app': CompositoryApp });
-        //customElements.define('compository-app', scopeElement(CompositoryApp));
+        //defineGlobalElements({ 'compository-app': CompositoryApp });
+        customElements.define('compository-app', scopeElement(CompositoryApp));
       })();
     </script>
   </body>
