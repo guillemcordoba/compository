@@ -1,4 +1,4 @@
-import init, { bundle_dna } from 'bundle-dna';
+import init, { bundle_dna } from 'bundle_dna';
 export async function generateDna(wasmUrl, compositoryService, dnaTemplateHash, uuid, properties) {
     await init(wasmUrl);
     // Get the dna template

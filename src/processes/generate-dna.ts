@@ -1,4 +1,4 @@
-import init, { bundle_dna } from 'bundle-dna';
+import init, { bundle_dna } from 'bundle_dna';
 import { CompositoryService } from '../services/compository-service';
 import { ZomeDef } from '../types/dnas';
 
