@@ -12,8 +12,13 @@
       body {
         background: #fafafa;
         display: flex;
+        font-family: Arial, Helvetica, sans-serif;
       }
     </style>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <holochain-membrane-context id="membrane-context">
@@ -23,7 +28,7 @@
     <script type="module">
       import { CompositoryApp } from '../dist';
       import ConductorApi from '@holochain/conductor-api';
-      import { deserializeHash } from '@holochain-open-dev/common';
+      import { serializeHash } from '@holochain-open-dev/common';
       import { scopeElement } from 'scoped-elements/dist/scoped';
       //import { defineGlobalElements } from 'scoped-elements/dist/global';
       import { HolochainMembraneContext } from 'holochain-membrane-context';
@@ -36,14 +41,13 @@
           'ws://localhost:8888'
         );
 
-        const compositoryCellId = [
-          deserializeHash(
-            'uhC0k17jxt5BaQRkGTk2pNbPD7vjL9NPQZwiMTLL5TGWWp2znhbyf'
-          ),
-          deserializeHash(
-            'uhCAkMoKqRPZUByIO1T8I0Z3UhVQabVspJ2__rFrhcdy-xreA_rkm'
-          ),
-        ];
+        const cellIds = await admin.listCellIds();
+
+        const compositoryHash =
+          'uhC0k17jxt5BaQRkGTk2pNbPD7vjL9NPQZwiMTLL5TGWWp2znhbyf';
+        const compositoryCellId = cellIds.find(
+          cellId => serializeHash(cellId[0]) === compositoryHash
+        );
 
         customElements.define(
           'holochain-membrane-context',

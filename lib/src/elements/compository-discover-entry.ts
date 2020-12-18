@@ -32,18 +32,20 @@ export class CompositoryDiscoverEntry extends membraneContext(LitElement) {
       this.entryUri
     );
 
-    const { renderers, def } = await fetchRenderersForZome(
+    const [def, renderers] = await fetchRenderersForZome(
       compositoryService,
       cellId,
       zomeIndex
     );
 
-    const entryIdStr = def.entry_defs[entryDefIndex];
-    renderers.entryRenderers[entryIdStr].render(
-      this._scope.shadowRoot as ShadowRoot,
-      (this._scope.shadowRoot as any).customElements as any,
-      entryHash
-    );
+    if (renderers) {
+      const entryIdStr = def.entry_defs[entryDefIndex];
+      renderers.entryRenderers[entryIdStr].render(
+        this._scope.shadowRoot as ShadowRoot,
+        (this._scope.shadowRoot as any).customElements as any,
+        entryHash
+      );
+    }
 
     this._loading = false;
   }
