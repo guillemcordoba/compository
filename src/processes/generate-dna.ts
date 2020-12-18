@@ -40,7 +40,7 @@ export async function generateDna(
 
   await compositoryService.publishInstantiatedDna({
     dna_template_hash: dnaTemplateHash,
-    instantiated_dna_hash: serializeHash(dna_hash),
+    instantiated_dna_hash: serializeHash(new Uint8Array(dna_hash)),
     properties,
     uuid,
   });

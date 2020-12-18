@@ -18,7 +18,7 @@ export async function generateDna(wasmUrl, compositoryService, dnaTemplateHash, 
     const { bundled_dna_file, dna_hash } = await bundle_dna(dnaTemplate.name, uuid, properties, argZomes, codes.map(code => ({ code: Array.from(new Uint8Array(code)) })));
     await compositoryService.publishInstantiatedDna({
         dna_template_hash: dnaTemplateHash,
-        instantiated_dna_hash: serializeHash(dna_hash),
+        instantiated_dna_hash: serializeHash(new Uint8Array(dna_hash)),
         properties,
         uuid,
     });
