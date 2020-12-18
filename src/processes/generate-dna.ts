@@ -1,3 +1,4 @@
+import { serializeHash } from '@holochain-open-dev/common';
 import init, { bundle_dna } from 'bundle_dna';
 import { CompositoryService } from '../services/compository-service';
 import { ZomeDef } from '../types/dnas';
@@ -39,7 +40,7 @@ export async function generateDna(
 
   await compositoryService.publishInstantiatedDna({
     dna_template_hash: dnaTemplateHash,
-    instantiated_dna_hash: dna_hash,
+    instantiated_dna_hash: serializeHash(dna_hash),
     properties,
     uuid,
   });

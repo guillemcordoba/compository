@@ -1,3 +1,4 @@
+import { serializeHash } from '@holochain-open-dev/common';
 import init, { bundle_dna } from 'bundle_dna';
 export async function generateDna(wasmUrl, compositoryService, dnaTemplateHash, uuid, properties) {
     await init(wasmUrl);
@@ -17,7 +18,7 @@ export async function generateDna(wasmUrl, compositoryService, dnaTemplateHash, 
     const { bundled_dna_file, dna_hash } = await bundle_dna(dnaTemplate.name, uuid, properties, argZomes, codes.map(code => ({ code: Array.from(new Uint8Array(code)) })));
     await compositoryService.publishInstantiatedDna({
         dna_template_hash: dnaTemplateHash,
-        instantiated_dna_hash: dna_hash,
+        instantiated_dna_hash: serializeHash(dna_hash),
         properties,
         uuid,
     });
