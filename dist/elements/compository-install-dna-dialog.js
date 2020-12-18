@@ -19,11 +19,13 @@ export class CompositoryInstallDnaDialog extends membraneContext(Scoped(LitEleme
     async installDna() {
         const adminWs = this.adminWebsocket;
         const agentKey = await adminWs.generateAgentPubKey();
+        const installed_app_id = `generated-app-${Date.now() % 1000}`;
         const result = await adminWs.installApp({
             agent_key: agentKey,
             dnas: [{ nick: '', path: this._dnaPath }],
-            installed_app_id: `generated-app-${Date.now() % 1000}`,
+            installed_app_id,
         });
+        await adminWs.activateApp({ installed_app_id });
         this.dispatchEvent(new CustomEvent('dna-installed', {
             detail: { cellId: result.cell_data[0][0] },
             bubbles: true,
