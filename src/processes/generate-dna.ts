@@ -46,7 +46,7 @@ export async function generateDna(
   });
 
   // Return the contents
-  return new File([bundled_dna_file.buffer], 'generated.dna.gz', {
+  return new File([new Uint8Array(bundled_dna_file).buffer], 'generated.dna.gz', {
     type: 'application/octet-stream',
   });
 }

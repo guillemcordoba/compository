@@ -12,6 +12,7 @@ export declare class Button extends Button_base {
         'mwc-icon': typeof Icon;
         'mwc-ripple': typeof Ripple;
     };
+    ripple: Promise<Ripple | null>;
     static styles: import("lit-element").CSSResult;
 }
 export {};
