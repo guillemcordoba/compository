@@ -2,7 +2,7 @@ import { serializeHash } from '@holochain-open-dev/common';
 import { CellId } from '@holochain/conductor-api';
 import { CompositoryService } from '../services/compository-service';
 import { ZomeDef } from '../types/dnas';
-import { ScopedRenderers, SetupRenderers } from '../types/scoped-renderers';
+import { ScopedRenderers } from '../types/scoped-renderers';
 import { importModuleFromFile } from './import-module-from-file';
 
 export async function fetchRenderersForZome(
@@ -53,9 +53,6 @@ async function internalFetchRenderersForZome(
   );
 
   const module = await importModuleFromFile(file);
-  const renderers = await (module.default as SetupRenderers)(
-    compositoryService.appWebsocket,
-    cellId
-  );
+  const renderers = module.default as ScopedRenderers;
   return [zomeDef, renderers];
 }

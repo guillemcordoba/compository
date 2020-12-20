@@ -40,9 +40,10 @@ export class CompositoryDiscoverEntry extends membraneContext(LitElement) {
 
     if (renderers) {
       const entryIdStr = def.entry_defs[entryDefIndex];
-      renderers.entryRenderers[entryIdStr].render(
+      renderers.entry[entryIdStr].render(
         this._scope.shadowRoot as ShadowRoot,
-        (this._scope.shadowRoot as any).customElements as any,
+        this.appWebsocket,
+        cellId,
         entryHash
       );
     }
